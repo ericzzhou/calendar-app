@@ -1,0 +1,74 @@
+{
+  "name": "calendar-app",
+  "productName": "calendar-app",
+  "description": "calendar-app 日程提醒",
+  "keywords": [],
+  "main": "./src/main.js",
+  "version": "1.0.18",
+  "author": "ericz",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win --publish=always"
+  },
+  "build": {
+    "appId": "com.zhouzk.calendarapp",
+    "productName": "calendar-app",
+    "files": [
+      "src/**/*",
+      "node_modules/**/*",
+      "build/**/*"
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "ericzzhou",
+        "repo": "calendar-app",
+        "private": true
+      }
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "build/icons/Martz90-Circle-Calendar.ico"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "calendar-app"
+    },
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "icon": "build/icons/Martz90-Circle-Calendar.icns"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "icon": "build/icons"
+    }
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "electron-is-dev": "^3.0.1",
+    "electron-log": "^5.2.0",
+    "electron-store": "^10.0.0",
+    "electron-updater": "^6.3.4",
+    "googleapis": "^144.0.0",
+    "handlebars": "^4.7.8",
+    "node-notifier": "^10.0.1",
+    "node-schedule": "^2.1.1"
+  },
+  "devDependencies": {
+    "electron": "30.0.1",
+    "electron-builder": "^25.0.5"
+  }
+}

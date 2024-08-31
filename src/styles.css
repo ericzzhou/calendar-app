@@ -1,0 +1,135 @@
+body {
+  font-family: "Microsoft YaHei", Arial, sans-serif;
+  font-size: 12px;
+  margin: 4px;
+  padding-bottom: 30px;
+}
+
+#eventList {
+  list-style-type: none;
+  padding: 0;
+}
+
+#authButton {
+  width: 100%;
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#authButton:hover {
+  background-color: #45a049;
+}
+
+.highlighted,
+.event-container:hover {
+  background-color: #ccc;
+  cursor: pointer;
+}
+.event-container {
+  display: flex;
+  justify-content: space-between; /* 在主轴（水平轴）上分配空白空间 */
+  align-items: center; /* 在交叉轴（垂直轴）上对齐 */
+  padding: 4px; /* 内边距 */
+}
+
+.event-time {
+  padding: 4px; /* 内边距 */
+  width: 50px; /* 固定宽度 */
+  text-align: left; /* 内容居中对齐 */
+}
+
+.event-summary {
+  padding: 1px; /* 内边距 */
+  flex: 1; /* 宽度自适应 */
+}
+
+/* 全局隐藏滚动条 */
+*::-webkit-scrollbar {
+  display: none;
+}
+
+/* 确保 overflow 设置为滚动 */
+.element {
+  overflow-y: scroll; /* 强制垂直滚动 */
+  overflow-x: hidden; /* 可根据需要设置横向 */
+}
+
+/* 隐藏滚动条 */
+.element::-webkit-scrollbar {
+  display: none;
+}
+
+.summary {
+  /* color: #878383; */
+}
+.email {
+  color: #878383;
+  margin-top: 4px;
+}
+
+.location {
+  color: #fff;
+  margin-top: 4px;
+  background-color: #018e8e;
+  border-radius: 10px;
+  padding: 2px 10px 2px 10px;
+  display: inline-block;
+}
+
+#footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  height: 20px;
+  width: 100%;
+  text-align: center;
+  padding: 5px;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.3); /* 阴影 */
+  background-color: #fff;
+}
+
+#download-progress {
+  text-align: center;
+  background-color: #ede96d;
+  padding: 4px;
+}
+
+.time-to-start {
+  border-radius: 5px;
+  background-color: #018e8e;
+  color: #fff;
+  padding: 2px 5px 2px 5px;
+  margin-top: 10px;
+}
+
+
+.isOptional {
+  background: #696969;
+  display: block;
+  height: 100%;
+  padding: 5px;
+  border-radius: 5px;
+  color: #fff;
+}
+
+.events-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: left;
+  align-items: center;
+}
+.event-con{
+  width: 300px;
+  display: block;
+  border-bottom: 1px solid #f7f7f7;
+  ;
+}
+
+.duration{
+  color: #878383;
+}

@@ -1,0 +1,5 @@
+node_modules
+out
+release
+svelte-app/node_modules
+.env
