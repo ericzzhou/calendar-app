@@ -1,0 +1,20 @@
+{
+  "name": "calendar-app",
+  "productName": "calendar-app",
+  "description": "My Electron application description",
+  "keywords": [],
+  "main": "./main.js",
+  "version": "1.0.0",
+  "author": "ericz",
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "electron-store": "^10.0.0",
+    "googleapis": "^144.0.0",
+    "node-schedule": "^2.1.1"
+  },
+  "devDependencies": {
+    "electron": "30.0.1"
+  }
+}

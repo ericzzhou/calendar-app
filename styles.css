@@ -1,0 +1,30 @@
+body {
+  font-family: Arial, sans-serif;
+}
+
+#eventList {
+  list-style-type: none;
+  padding: 0;
+}
+
+#eventList li {
+  margin-bottom: 15px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+#authButton {
+  display: none;
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#authButton:hover {
+  background-color: #45a049;
+}
