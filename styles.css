@@ -1,5 +1,6 @@
 body {
   font-family: Arial, sans-serif;
+  font-size: 12px;
 }
 
 #eventList {
@@ -18,7 +19,7 @@ body {
 #authButton {
   display: none;
   padding: 10px 20px;
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   border: none;
   border-radius: 5px;
@@ -27,4 +28,25 @@ body {
 
 #authButton:hover {
   background-color: #45a049;
+}
+
+.event-container {
+  display: flex;
+  justify-content: space-between; /* 在主轴（水平轴）上分配空白空间 */
+  align-items: center; /* 在交叉轴（垂直轴）上对齐 */
+  border: 1px solid #ccc; /* 边框，方便查看布局效果 */
+  padding: 2px; /* 内边距 */
+  
+}
+
+.event-time {
+  padding: 1px; /* 内边距 */
+  width: 50px; /* 固定宽度 */
+  text-align: left; /* 内容居中对齐 */
+}
+
+.event-summary {
+  padding: 1px; /* 内边距 */
+  flex: 1; /* 宽度自适应 */
+  margin-left: 5px; /* 左边距，避免和事件时间重叠 */
 }

@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Google Calendar Integration</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <h1>Google Calendar Event List</h1>
-    <button id="authButton">Sign in with Google</button>
-    <ul id="eventList"></ul>
+    <button style="display: none;" id="authButton">Sign in with Google</button>
+    <button id="reload">Reload</button>
+    <div id="eventList"></div>
     <script src="renderer.js"></script>
 </body>
 </html>
