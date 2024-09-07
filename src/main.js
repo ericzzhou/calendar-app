@@ -242,12 +242,47 @@ class MainProcess {
     return groupedEvents;
   }
 
-   /**
+  // 格式化事件持续时长
+  formatDuration(start, end) {
+    const startTime = new Date(start);
+    const endTime = new Date(end);
+    const duration = Math.round((endTime - startTime) / (1000 * 60)); // 时长（分钟）
+
+    // 如果持续时间小于60分钟，直接返回 xx分钟
+    if (duration < 60) {
+      return `${duration} 分钟`;
+    }
+
+    // 如果持续时间是60分钟的倍数，返回 xx小时
+    if (duration % 60 === 0) {
+      const hours = duration / 60;
+      return `${hours} 小时`;
+    }
+
+    // 否则返回 xx.xx小时，保留两位小数
+    const hours = (duration / 60).toFixed(2);
+    return `${hours} 小时`;
+  }
+
+  // 格式化日期时间
+  formatDateTime(dateTime) {
+    const options = {
+      // year: "numeric",
+      // month: "2-digit",
+      // day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    };
+    return new Date(dateTime).toLocaleTimeString("zh-CN", options);
+    // return new Date(dateTime).toLocaleDateString("zh-CN", options);
+  }
+
+  /**
    * 获取指定日期的星期几
    * @param {string|Date} dateTime - 日期时间字符串或 Date 对象
    * @returns {string} - 星期几的名称
    */
-   getDayOfWeek(dateTime) {
+  getDayOfWeek(dateTime) {
     const date = new Date(dateTime);
     const options = {
       weekday: "long", // 使用 "short" 可以获取缩写，例如 "Mon"
@@ -286,17 +321,17 @@ class MainProcess {
       });
     });
 
+    return events;
   }
   buildTemplate(events) {
     const group = this.groupEventsByDate(events);
     const data = this.formatRenderData(group);
-
+   
     const templatePath = path.join(__dirname, "index.hbs");
+
     const templateSource = fs.readFileSync(templatePath, "utf8");
+
     const template = handlebars.compile(templateSource);
-
-    
-
     const html = template(data);
     this.win.webContents.send("html", html);
   }

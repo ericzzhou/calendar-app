@@ -21,7 +21,7 @@ class RenderProcess {
   /**
    * 监听主线程消息
    */
-  onMainEvent() {
+  listeningMainEvent() {
     // 用户授权成功
     ipcRenderer.on("server-port", async (event, port) => {
       this.serverPort = port;
@@ -38,7 +38,8 @@ class RenderProcess {
       if (tokens) {
         this.googleOauthToken = tokens;
         this.oauth2Client.setCredentials(tokens);
-        this.getAndRenderEvents();
+
+        this.refresh()
       } else {
         // 用户未登录，显示授权按钮
         document.getElementById("authButton").style.display = "block";
@@ -52,11 +53,12 @@ class RenderProcess {
       this.googleOauthToken = tokens;
       // 通知主线程持久化令牌
       this.sendEventToMain("save-tokens", tokens);
-      await this.getAndRenderEvents();
+
+      this.refresh();
     });
 
-    ipcRenderer.on("html", async (event, code) => {
-      document.getElementById("eventList").innerHTML = containerHtml;
+    ipcRenderer.on("html", async (event, html) => {
+      document.getElementById("eventList").innerHTML = html;
     });
   }
 
@@ -65,7 +67,10 @@ class RenderProcess {
     ipcRenderer.send(eventName, params);
   }
 
-  onPageEvent() {
+  /**
+   * 监听页面事件
+   */
+  listeningPageEvent() {
     // 点击google授权按钮进行授权
     const authButton = document.getElementById("authButton");
     authButton.addEventListener("click", () => {
@@ -82,194 +87,6 @@ class RenderProcess {
     });
   }
 
-  /**
-   * 获取指定日期的星期几
-   * @param {string|Date} dateTime - 日期时间字符串或 Date 对象
-   * @returns {string} - 星期几的名称
-   */
-  getDayOfWeek(dateTime) {
-    const date = new Date(dateTime);
-    const options = {
-      weekday: "long", // 使用 "short" 可以获取缩写，例如 "Mon"
-    };
-    return date.toLocaleDateString("zh-CN", options); // 返回中文的星期几名称，例如 "星期一"
-  }
-
-  // 格式化日期时间
-  formatDateTime(dateTime) {
-    const options = {
-      // year: "numeric",
-      // month: "2-digit",
-      // day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-    };
-    return new Date(dateTime).toLocaleTimeString("zh-CN", options);
-    // return new Date(dateTime).toLocaleDateString("zh-CN", options);
-  }
-
-  // 格式化事件持续时长
-  formatDuration(start, end) {
-    const startTime = new Date(start);
-    const endTime = new Date(end);
-    const duration = Math.round((endTime - startTime) / (1000 * 60)); // 时长（分钟）
-
-    // 如果持续时间小于60分钟，直接返回 xx分钟
-    if (duration < 60) {
-      return `${duration} 分钟`;
-    }
-
-    // 如果持续时间是60分钟的倍数，返回 xx小时
-    if (duration % 60 === 0) {
-      const hours = duration / 60;
-      return `${hours} 小时`;
-    }
-
-    // 否则返回 xx.xx小时，保留两位小数
-    const hours = (duration / 60).toFixed(2);
-    return `${hours} 小时`;
-  }
-
-  // 事件分组
-  groupEventsByDate(events) {
-    // print(events);
-    const groupedEvents = {
-      today: [],
-      tomorrow: [],
-      upcoming: [],
-    };
-
-    if (events == null || events.length == 0) {
-      return groupedEvents;
-    }
-    const now = new Date();
-    const today = new Date(now.toDateString());
-    const tomorrow = new Date(today);
-    tomorrow.setDate(today.getDate() + 1);
-
-    events.forEach((event) => {
-      if (event.start && event.start.dateTime) {
-        const eventStart = new Date(event.start.dateTime);
-
-        if (eventStart.toDateString() === today.toDateString()) {
-          groupedEvents.today.push(event);
-        } else if (eventStart.toDateString() === tomorrow.toDateString()) {
-          groupedEvents.tomorrow.push(event);
-        } else {
-          groupedEvents.upcoming.push({
-            date: `${eventStart.getMonth() + 1}月${eventStart.getDate()}号`,
-            events: [event],
-          });
-        }
-      }
-    });
-
-    return groupedEvents;
-  }
-
-  formatRenderData(groupedEvents) {
-    const events = [];
-    if (groupedEvents.today.length > 0) {
-      events.push({
-        date: "今天",
-        DayOfWeek: this.getDayOfWeek(groupedEvents.today[0].start.dateTime),
-        events: groupedEvents.today,
-      });
-    }
-    if (groupedEvents.tomorrow.length > 0) {
-      events.push({
-        date: "明天",
-        DayOfWeek: this.getDayOfWeek(groupedEvents.tomorrow[0].start.dateTime),
-        events: groupedEvents.tomorrow,
-      });
-    }
-    groupedEvents.upcoming.forEach((group) => {
-      // 如果group.date 已经存在于 events, 则只需要追加 events
-      const existingGroup = events.find((e) => e.date === group.date);
-      if (existingGroup) {
-        existingGroup.events.push(...group.events);
-        return;
-      }
-
-      events.push({
-        date: group.date,
-        DayOfWeek: this.getDayOfWeek(group.events[0].start.dateTime),
-        events: group.events,
-      });
-    });
-
-    console.log(JSON.stringify(events));
-  }
-  /**
-   * 渲染事件列表,返回 html 片段
-   * @param {*} groupedEvents
-   * @returns 返回 html 片段
-   */
-  renderGroupedEvents(groupedEvents) {
-    const _this = this;
-    let container = "";
-    // const container = document.getElementById("events-container");
-    // container.innerHTML = "";
-
-    function createEventElement(event) {
-      const div = document.createElement("div");
-      div.classList.add("event");
-      div.innerHTML = `
-        <div class="event-container">
-          <div class="event-time">${_this.formatDateTime(
-            event.start.dateTime
-          )} <br/> ${_this.formatDuration(
-        event.start.dateTime,
-        event.end.dateTime
-      )}</div>
-          <div class="event-summary">
-          <strong>${event.summary}</strong>
-          <span>${event.creator.email}</span>
-          
-          </div>
-          </div>
-      `;
-      return div;
-    }
-
-    if (groupedEvents.today.length > 0) {
-      const todaySection = document.createElement("div");
-      todaySection.classList.add("section");
-      todaySection.innerHTML = `<h3>今天 ${this.getDayOfWeek(
-        groupedEvents.today[0].start.dateTime
-      )}</h3>`;
-      groupedEvents.today.forEach((event) =>
-        todaySection.appendChild(createEventElement(event))
-      );
-      container += todaySection.innerHTML;
-    }
-
-    if (groupedEvents.tomorrow.length > 0) {
-      const tomorrowSection = document.createElement("div");
-      tomorrowSection.classList.add("section");
-      tomorrowSection.innerHTML = `<h3>明天 ${this.getDayOfWeek(
-        groupedEvents.tomorrow[0].start.dateTime
-      )}</h3>`;
-      groupedEvents.tomorrow.forEach((event) =>
-        tomorrowSection.appendChild(createEventElement(event))
-      );
-      container += tomorrowSection.innerHTML;
-    }
-
-    groupedEvents.upcoming.forEach((group) => {
-      const upcomingSection = document.createElement("div");
-      upcomingSection.classList.add("section");
-      upcomingSection.innerHTML = `<h3>${group.date} ${this.getDayOfWeek(
-        group.events[0].start.dateTime
-      )}</h3>`;
-      group.events.forEach((event) =>
-        upcomingSection.appendChild(createEventElement(event))
-      );
-      container += upcomingSection.innerHTML;
-    });
-
-    return container;
-  }
   /**
    * 从 Google Calendar 获取数据
    * @param {*} maxResults
@@ -300,34 +117,18 @@ class RenderProcess {
     return events;
   }
 
-  async getAndRenderEvents() {
-    const events = await this.getEventsFromGoogleCalendar();
-    console.log("events from google:", events);
-    this.sendEventToMain("calendar-events", events);
-
-    const groupedEvents = this.groupEventsByDate(events);
-    console.log("groupEvents", groupedEvents);
-    const containerHtml = this.renderGroupedEvents(groupedEvents);
-    console.log("containerHtml", containerHtml);
-    document.getElementById("eventList").innerHTML = containerHtml;
-
-    // const formatData = this.formatRenderData(groupedEvents);
-    // const source = fs.readFileSync(`${__dirname}/index.hbs`, "utf8");
-    // const Handlebars = require('handlebars');
-    // // Compile the template
-    // const template = Handlebars.compile(source);
-    // // Render the template with data
-    // const html = template(formatData);
-    // console.log("html",html)
-    // document.getElementById("eventList").innerHTML = html;
+  init() {
+    this.listeningMainEvent();
+    this.listeningPageEvent();
+    this.refresh();
   }
-
-  async init() {
+  async refresh() {
     // 向主线程请求获取持久化的令牌
-    this.sendEventToMain("get-tokens");
-    this.onMainEvent();
-    this.onPageEvent();
-    // this.getAndRenderEvents();
+    if (!this.googleOauthToken) {
+      this.sendEventToMain("get-tokens");
+    }
+    const events = await this.getEventsFromGoogleCalendar();
+    this.sendEventToMain("calendar-events", events);
   }
 }
 
@@ -341,5 +142,5 @@ const render = new RenderProcess();
 render.init();
 
 setInterval(() => {
-  // render.getAndRenderEvents();
+  render.refresh();
 }, 5 * 60 * 1000); // 5分钟刷新一次
