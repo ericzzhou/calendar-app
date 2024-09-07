@@ -11,6 +11,11 @@ class MainProcess {
     this.store = null;
     this.win = null;
     this.httpServer = null;
+    this.notificationJobs = new Map(); // 存储已经设置提醒的任务
+    this.configuration = {
+      eventInterval: 5, // 刷新事件间隔分钟
+      notificationTime: 10, //事件提醒时间，提前x分钟
+    };
   }
 
   async createMainWindow() {
@@ -20,7 +25,7 @@ class MainProcess {
       webPreferences: {
         preload: `${__dirname}/preload.js`,
         nodeIntegration: true,
-        contextIsolation: false,
+        contextIsolation: false,  // 确保可以正常使用 DOM 访问
       },
     });
 
@@ -28,21 +33,53 @@ class MainProcess {
   }
 
   scheduleNotification(event) {
+    // console.log(event)
     const eventStartTime = new Date(event.start.dateTime); // 假设 event.start.dateTime 是 ISO 时间格式
-    const notificationTime = new Date(eventStartTime.getTime() - 10 * 60000); // 提前10分钟提醒
+    const notificationTime = new Date(
+      eventStartTime.getTime() - this.configuration.notificationTime * 60000
+    ); // 提前 configuration.notificationTime 分钟提醒
 
-    schedule.scheduleJob(notificationTime, () => {
+    // 检查是否已经为该事件设置了提醒，如果有则取消
+    if (this.notificationJobs.has(event.id)) {
+      const existingJob = this.notificationJobs.get(event.id);
+      existingJob.cancel(); // 取消之前的定时任务
+      console.log(`提醒已取消： ${event.summary} at ${notificationTime}`);
+    }
+
+    // 如果当前时间已超过提醒时间，立即提醒
+    const currentTime = new Date();
+    if (notificationTime < currentTime) {
+      console.log(`任务过期，立即提醒： ${event.summary} at ${currentTime}`);
+
+      // 显示立即提醒
+      const immediateNotification = new Notification({
+        title: "会议提醒",
+        body: `您的会议 "${event.summary}" 即将开始！`,
+      });
+      immediateNotification.show();
+      return; // 跳过后续定时任务设置
+    }
+
+    // 正常设置新的提醒任务
+    const job = schedule.scheduleJob(notificationTime, () => {
       const notification = new Notification({
         title: "会议提醒",
-        body: `您的会议 "${event.summary}" 将在10分钟后开始。`,
+        body: `您的会议 "${event.summary}" 将在${this.configuration.notificationTime}分钟后开始。`,
       });
       notification.show();
     });
+
+    // 将新任务存储到 Map 中，使用事件的唯一 ID 作为 key
+    this.notificationJobs.set(event.id, job);
 
     console.log(`提醒已设置: ${event.summary} at ${notificationTime}`);
   }
 
   processEvents(events) {
+    if (!events) {
+      console.log("没有事件需要设置提醒");
+      return;
+    }
     events.forEach((event) => {
       if (event.start && event.start.dateTime) {
         this.scheduleNotification(event); // 为每个事件设置提醒
@@ -70,8 +107,8 @@ class MainProcess {
   }
 
   onRenderEvent() {
-    ipcMain.on("save-tokens", (event, tokens) => {
-      this.store.set("oauthTokens", tokens);
+    ipcMain.on("save-tokens", async (event, tokens) => {
+      await this.setStore("oauthTokens", tokens);
       console.log("Tokens saved successfully");
     });
 
@@ -104,14 +141,28 @@ class MainProcess {
     });
   }
 
-  InitStore() {
-    this.store = new Store(); // 初始化 store
-    console.log("Store loaded:", this.store.path); // 打印存储路径，确保加载成功
+  async setStore(storeName, storeValue) {
+    if (!this.store) {
+      // 动态导入 electron-store
+      Store = (await import("electron-store")).default;
+      this.store = new Store(); // 初始化 store
+      console.log("Store loaded:", this.store.path); // 打印存储路径，确保加载成功
+    }
+
+    this.store.set(storeName, storeValue);
+    console.log("Store set:", storeName, "=", storeValue);
   }
+
   async Init() {
-    // 动态导入 electron-store
-    Store = (await import("electron-store")).default;
-    this.InitStore();
+    // 刷新事件间隔：分钟
+    await this.setStore("eventInterval", this.configuration.eventInterval);
+
+    // 事件提醒时间设置:分钟
+    await this.setStore(
+      "notificationTime",
+      this.configuration.notificationTime
+    );
+
     this.onAppEvent();
     this.onRenderEvent();
   }

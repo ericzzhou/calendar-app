@@ -28,7 +28,7 @@ class RenderProcess {
    */
   onMainEvent() {
     //主线程获取到持久化的token
-    ipcRenderer.once("tokens-retrieved", (event, tokens) => {
+    ipcRenderer.on("tokens-retrieved", (event, tokens) => {
       console.log("从主线程获取到持久化的token:", tokens);
       if (tokens) {
         this.googleOauthToken = tokens;
@@ -41,7 +41,7 @@ class RenderProcess {
     });
 
     // 用户授权成功
-    ipcRenderer.once("auth-code", async (event, code) => {
+    ipcRenderer.on("auth-code", async (event, code) => {
       const { tokens } = await this.oauth2Client.getToken(code);
       this.oauth2Client.setCredentials(tokens);
 
@@ -90,7 +90,21 @@ class RenderProcess {
     const startTime = new Date(start);
     const endTime = new Date(end);
     const duration = Math.round((endTime - startTime) / (1000 * 60)); // 时长（分钟）
-    return `${duration}m`;
+
+    // 如果持续时间小于60分钟，直接返回 xx分钟
+    if (duration < 60) {
+      return `${duration}分钟`;
+    }
+
+    // 如果持续时间是60分钟的倍数，返回 xx小时
+    if (duration % 60 === 0) {
+      const hours = duration / 60;
+      return `${hours}小时`;
+    }
+
+    // 否则返回 xx.xx小时，保留两位小数
+    const hours = (duration / 60).toFixed(2);
+    return `${hours}小时`;
   }
 
   // 事件分组
@@ -217,18 +231,19 @@ class RenderProcess {
     return events;
   }
 
-  getAndRenderEvents() {
-    this.getEventsFromGoogleCalendar().then((events) => {
-      console.log("events", events);
-      const groupedEvents = this.groupEventsByDate(events);
-      console.log("groupEvents", groupedEvents);
-      const containerHtml = this.renderGroupedEvents(groupedEvents);
-      console.log("containerHtml", containerHtml);
-      document.getElementById("eventList").innerHTML = containerHtml;
-    });
+  async getAndRenderEvents() {
+    const events = await this.getEventsFromGoogleCalendar();
+    console.log("events from google:", events);
+    this.sendEventToMain("calendar-events", events);
+
+    const groupedEvents = this.groupEventsByDate(events);
+    console.log("groupEvents", groupedEvents);
+    const containerHtml = this.renderGroupedEvents(groupedEvents);
+    console.log("containerHtml", containerHtml);
+    document.getElementById("eventList").innerHTML = containerHtml;
   }
 
-  init() {
+  async init() {
     // 向主线程请求获取持久化的令牌
     this.sendEventToMain("get-tokens");
     this.onMainEvent();
@@ -248,4 +263,4 @@ render.init();
 
 setInterval(() => {
   render.getAndRenderEvents();
-}, 60 * 60 * 1000);
+}, 5 * 60 * 1000); // 5分钟刷新一次

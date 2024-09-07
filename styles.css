@@ -50,3 +50,19 @@ body {
   flex: 1; /* 宽度自适应 */
   margin-left: 5px; /* 左边距，避免和事件时间重叠 */
 }
+
+/* 全局隐藏滚动条 */
+*::-webkit-scrollbar {
+  display: none;
+}
+
+/* 确保 overflow 设置为滚动 */
+.element {
+  overflow-y: scroll; /* 强制垂直滚动 */
+  overflow-x: hidden; /* 可根据需要设置横向 */
+}
+
+/* 隐藏滚动条 */
+.element::-webkit-scrollbar {
+  display: none;
+}
