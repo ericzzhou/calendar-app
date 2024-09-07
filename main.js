@@ -1,8 +1,17 @@
-const { app, BrowserWindow, ipcMain, shell } = require("electron");
+const {
+  app,
+  BrowserWindow,
+  ipcMain,
+  shell,
+  Tray,
+  Menu,
+  screen,
+} = require("electron");
 const http = require("http");
 const url = require("url");
 const schedule = require("node-schedule");
 const { Notification } = require("electron");
+const path = require("path");
 
 let Store;
 const httpServerPort = 12345;
@@ -10,6 +19,7 @@ class MainProcess {
   constructor() {
     this.store = null;
     this.win = null;
+    this.tray = null; //系统托盘
     this.httpServer = null;
     this.notificationJobs = new Map(); // 存储已经设置提醒的任务
     this.configuration = {
@@ -19,14 +29,27 @@ class MainProcess {
   }
 
   async createMainWindow() {
+    // 获取主屏幕的尺寸
+    const primaryDisplay = screen.getPrimaryDisplay();
+    const { width, height } = primaryDisplay.workAreaSize;
+    // 将窗口吸附到屏幕的右侧
+    const windowWidth = 300; // 假设窗口宽度是 800
+    const windowHeight = 800;
+    const xPos = width - windowWidth; // 计算窗口的 x 坐标，使其靠右侧
+    const yPos = 30; // 从屏幕顶部开始吸附
+
     this.win = new BrowserWindow({
-      width: 300,
-      height: 800,
+      width: windowWidth,
+      height: windowHeight,
+      x: xPos,
+      y: yPos,
+      alwaysOnTop: true, // 使窗口始终在其他窗口之上
       webPreferences: {
         preload: `${__dirname}/preload.js`,
         nodeIntegration: true,
-        contextIsolation: false,  // 确保可以正常使用 DOM 访问
+        contextIsolation: false, // 确保可以正常使用 DOM 访问
       },
+      
     });
 
     this.win.loadFile("index.html");
@@ -90,6 +113,18 @@ class MainProcess {
   onAppEvent() {
     app.whenReady().then(this.createMainWindow());
 
+    // 当窗口关闭时隐藏到托盘，而不是完全退出应用
+    app.on("close", (event) => {
+      event.processEvents();
+      this.win.hide();
+    });
+
+    // 当窗口最小化时隐藏到托盘
+    this.win.on("minimize", (event) => {
+      event.preventDefault();
+      this.win.hide();
+    });
+
     app.on("window-all-closed", () => {
       if (process.platform !== "darwin") {
         if (this.httpServer) {
@@ -104,6 +139,34 @@ class MainProcess {
         this.createMainWindow();
       }
     });
+  }
+  createTray() {
+    const iconPath = path.join(__dirname, "icon.png"); // 你自己的托盘图标路径
+    this.tray = new Tray(iconPath);
+
+    // 双击托盘图标时显示主窗口
+    this.tray.on("double-click", () => {
+      this.win.show();
+    });
+
+    // 创建托盘菜单
+    const trayMenu = Menu.buildFromTemplate([
+      {
+        label: "显示",
+        click: () => {
+          this.win.show();
+        },
+      },
+      {
+        label: "退出",
+        click: () => {
+          app.quit();
+        },
+      },
+    ]);
+
+    this.tray.setToolTip("日程提醒");
+    this.tray.setContextMenu(trayMenu);
   }
 
   onRenderEvent() {
@@ -131,8 +194,8 @@ class MainProcess {
             res.writeHead(200, { "Content-Type": "text/plain" });
             res.end("Authorization successful! You can close this window.");
 
-            win.webContents.send("auth-code", queryObject.code);
-            server.close();
+            this.win.webContents.send("auth-code", queryObject.code);
+            this.httpServer.close();
           }
         })
         .listen(httpServerPort, () => {
@@ -162,8 +225,9 @@ class MainProcess {
       "notificationTime",
       this.configuration.notificationTime
     );
-
+    this.createTray();
     this.onAppEvent();
+
     this.onRenderEvent();
   }
 }

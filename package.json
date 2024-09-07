@@ -1,6 +1,6 @@
 {
   "name": "calendar-app",
-  "productName": "calendar alert",
+  "productName": "calendar-alert",
   "description": "My Electron application description",
   "keywords": [],
   "main": "./main.js",
