@@ -1,0 +1,1160 @@
+{
+  "today": [
+      {
+          "kind": "calendar#event",
+          "etag": "\"3442685625702000\"",
+          "id": "5fp76mve0o2k1up8l2tlg30em0_20240907T070000Z",
+          "status": "confirmed",
+          "htmlLink": "https://www.google.com/calendar/event?eid=NWZwNzZtdmUwbzJrMXVwOGwydGxnMzBlbTBfMjAyNDA5MDdUMDcwMDAwWiBlcmljLnpob3VAeWFtaWJ1eS5jb20",
+          "created": "2023-11-25T02:30:08.000Z",
+          "updated": "2024-07-18T22:46:52.851Z",
+          "summary": "Leader技术研讨会",
+          "creator": {
+              "email": "freegod.xu@yamibuy.com"
+          },
+          "organizer": {
+              "email": "freegod.xu@yamibuy.com"
+          },
+          "start": {
+              "dateTime": "2024-09-07T15:00:00+08:00",
+              "timeZone": "Asia/Shanghai"
+          },
+          "end": {
+              "dateTime": "2024-09-07T17:00:00+08:00",
+              "timeZone": "Asia/Shanghai"
+          },
+          "recurringEventId": "5fp76mve0o2k1up8l2tlg30em0",
+          "originalStartTime": {
+              "dateTime": "2024-09-07T15:00:00+08:00",
+              "timeZone": "Asia/Shanghai"
+          },
+          "iCalUID": "5fp76mve0o2k1up8l2tlg30em0@google.com",
+          "sequence": 1,
+          "attendees": [
+              {
+                  "email": "freegod.xu@yamibuy.com",
+                  "organizer": true,
+                  "responseStatus": "accepted"
+              },
+              {
+                  "email": "eric.zhou@yamibuy.com",
+                  "self": true,
+                  "responseStatus": "needsAction"
+              },
+              {
+                  "email": "group.it.xa.leader@yamibuy.com",
+                  "displayName": "GROUP.IT.XA.LEADER",
+                  "responseStatus": "needsAction"
+              }
+          ],
+          "hangoutLink": "https://meet.google.com/gkt-ooon-ywg",
+          "conferenceData": {
+              "entryPoints": [
+                  {
+                      "entryPointType": "video",
+                      "uri": "https://meet.google.com/gkt-ooon-ywg",
+                      "label": "meet.google.com/gkt-ooon-ywg"
+                  },
+                  {
+                      "entryPointType": "more",
+                      "uri": "https://tel.meet/gkt-ooon-ywg?pin=3181639800978",
+                      "pin": "3181639800978"
+                  },
+                  {
+                      "regionCode": "US",
+                      "entryPointType": "phone",
+                      "uri": "tel:+1-470-839-8343",
+                      "label": "+1 470-839-8343",
+                      "pin": "288422381"
+                  }
+              ],
+              "conferenceSolution": {
+                  "key": {
+                      "type": "hangoutsMeet"
+                  },
+                  "name": "Google Meet",
+                  "iconUri": "https://fonts.gstatic.com/s/i/productlogos/meet_2020q4/v6/web-512dp/logo_meet_2020q4_color_2x_web_512dp.png"
+              },
+              "conferenceId": "gkt-ooon-ywg"
+          },
+          "reminders": {
+              "useDefault": true
+          },
+          "eventType": "default"
+      }
+  ],
+  "tomorrow": [
+      {
+          "kind": "calendar#event",
+          "etag": "\"3431413633587000\"",
+          "id": "lniktj4f4l7robsis9s4322b7f_20240908T020000Z",
+          "status": "confirmed",
+          "htmlLink": "https://www.google.com/calendar/event?eid=bG5pa3RqNGY0bDdyb2JzaXM5czQzMjJiN2ZfMjAyNDA5MDhUMDIwMDAwWiBlcmljLnpob3VAeWFtaWJ1eS5jb20",
+          "created": "2023-10-10T01:38:16.000Z",
+          "updated": "2024-08-04T08:06:23.917Z",
+          "summary": "per-purchase 每日站会",
+          "description": "<ul><li><p><b>昨天做了什么（What did I do yesterday）</b>： 每个团队成员都会简要回顾他们在前一天的工作中完成了哪些任务或工作项。这有助于团队了解进度和成就。</p></li><li><p><b>今天将要做什么（What will I do today）</b>： 成员会分享他们计划在当天要完成的任务。这有助于团队了解谁将在哪些方面工作，以确保团队的工作在正确的方向上推进。</p></li><li><p><b>是否有任何阻碍或问题（Are there any blockers or impediments）</b>： 如果团队成员遇到了任何问题或阻碍，他们应该在站会上提出，并寻求团队的支持和解决方案。</p></li></ul>",
+          "location": "西安-6-Ohio (9)",
+          "creator": {
+              "email": "eric.zhou@yamibuy.com",
+              "self": true
+          },
+          "organizer": {
+              "email": "eric.zhou@yamibuy.com",
+              "self": true
+          },
+          "start": {
+              "dateTime": "2024-09-08T10:00:00+08:00",
+              "timeZone": "Asia/Shanghai"
+          },
+          "end": {
+              "dateTime": "2024-09-08T10:15:00+08:00",
+              "timeZone": "Asia/Shanghai"
+          },
+          "recurringEventId": "lniktj4f4l7robsis9s4322b7f",
+          "originalStartTime": {
+              "dateTime": "2024-09-08T10:00:00+08:00",
+              "timeZone": "Asia/Shanghai"
+          },
+          "iCalUID": "lniktj4f4l7robsis9s4322b7f@google.com",
+          "sequence": 2,
+          "attendees": [
+              {
+                  "email": "yamibuy.com_37343137313134383338@resource.calendar.google.com",
+                  "displayName": "西安-6-Ohio (9)",
+                  "resource": true,
+                  "responseStatus": "accepted"
+              },
+              {
+                  "email": "eric.zhou@yamibuy.com",
+                  "organizer": true,
+                  "self": true,
+                  "responseStatus": "accepted"
+              },
+              {
+                  "email": "group.pre-purchase@yamibuy.com",
+                  "displayName": "GROUP.Pre-Purchase",
+                  "responseStatus": "needsAction"
+              },
+              {
+                  "email": "shan.lu@yamibuy.com",
+                  "responseStatus": "accepted"
+              },
+              {
+                  "email": "louise.chen@yamibuy.com",
+                  "responseStatus": "accepted"
+              }
+          ],
+          "hangoutLink": "https://meet.google.com/vep-xxgk-dur",
+          "conferenceData": {
+              "entryPoints": [
+                  {
+                      "entryPointType": "video",
+                      "uri": "https://meet.google.com/vep-xxgk-dur",
+                      "label": "meet.google.com/vep-xxgk-dur"
+                  },
+                  {
+                      "entryPointType": "more",
+                      "uri": "https://tel.meet/vep-xxgk-dur?pin=7570257862322",
+                      "pin": "7570257862322"
+                  },
+                  {
+                      "regionCode": "US",
+                      "entryPointType": "phone",
+                      "uri": "tel:+1-513-757-0116",
+                      "label": "+1 513-757-0116",
+                      "pin": "484724684"
+                  }
+              ],
+              "conferenceSolution": {
+                  "key": {
+                      "type": "hangoutsMeet"
+                  },
+                  "name": "Google Meet",
+                  "iconUri": "https://fonts.gstatic.com/s/i/productlogos/meet_2020q4/v6/web-512dp/logo_meet_2020q4_color_2x_web_512dp.png"
+              },
+              "conferenceId": "vep-xxgk-dur"
+          },
+          "reminders": {
+              "useDefault": false,
+              "overrides": [
+                  {
+                      "method": "popup",
+                      "minutes": 5
+                  }
+              ]
+          },
+          "attachments": [
+              {
+                  "fileUrl": "https://docs.google.com/document/d/1OJ1eof5FNQ3vM5pWWumeFS_8oKsGqS-9HfWVJi24wYY/edit",
+                  "title": "记录 - per-purchase 每日站会",
+                  "mimeType": "application/vnd.google-apps.document",
+                  "iconLink": "https://drive-thirdparty.googleusercontent.com/16/type/application/vnd.google-apps.document",
+                  "fileId": "1OJ1eof5FNQ3vM5pWWumeFS_8oKsGqS-9HfWVJi24wYY"
+              }
+          ],
+          "eventType": "default"
+      }
+  ],
+  "upcoming": [
+      {
+          "date": "9月9号",
+          "events": [
+              {
+                  "kind": "calendar#event",
+                  "etag": "\"3431413633587000\"",
+                  "id": "lniktj4f4l7robsis9s4322b7f_20240909T020000Z",
+                  "status": "confirmed",
+                  "htmlLink": "https://www.google.com/calendar/event?eid=bG5pa3RqNGY0bDdyb2JzaXM5czQzMjJiN2ZfMjAyNDA5MDlUMDIwMDAwWiBlcmljLnpob3VAeWFtaWJ1eS5jb20",
+                  "created": "2023-10-10T01:38:16.000Z",
+                  "updated": "2024-08-04T08:06:23.917Z",
+                  "summary": "per-purchase 每日站会",
+                  "description": "<ul><li><p><b>昨天做了什么（What did I do yesterday）</b>： 每个团队成员都会简要回顾他们在前一天的工作中完成了哪些任务或工作项。这有助于团队了解进度和成就。</p></li><li><p><b>今天将要做什么（What will I do today）</b>： 成员会分享他们计划在当天要完成的任务。这有助于团队了解谁将在哪些方面工作，以确保团队的工作在正确的方向上推进。</p></li><li><p><b>是否有任何阻碍或问题（Are there any blockers or impediments）</b>： 如果团队成员遇到了任何问题或阻碍，他们应该在站会上提出，并寻求团队的支持和解决方案。</p></li></ul>",
+                  "location": "西安-6-Ohio (9)",
+                  "creator": {
+                      "email": "eric.zhou@yamibuy.com",
+                      "self": true
+                  },
+                  "organizer": {
+                      "email": "eric.zhou@yamibuy.com",
+                      "self": true
+                  },
+                  "start": {
+                      "dateTime": "2024-09-09T10:00:00+08:00",
+                      "timeZone": "Asia/Shanghai"
+                  },
+                  "end": {
+                      "dateTime": "2024-09-09T10:15:00+08:00",
+                      "timeZone": "Asia/Shanghai"
+                  },
+                  "recurringEventId": "lniktj4f4l7robsis9s4322b7f",
+                  "originalStartTime": {
+                      "dateTime": "2024-09-09T10:00:00+08:00",
+                      "timeZone": "Asia/Shanghai"
+                  },
+                  "iCalUID": "lniktj4f4l7robsis9s4322b7f@google.com",
+                  "sequence": 2,
+                  "attendees": [
+                      {
+                          "email": "yamibuy.com_37343137313134383338@resource.calendar.google.com",
+                          "displayName": "西安-6-Ohio (9)",
+                          "resource": true,
+                          "responseStatus": "accepted"
+                      },
+                      {
+                          "email": "eric.zhou@yamibuy.com",
+                          "organizer": true,
+                          "self": true,
+                          "responseStatus": "accepted"
+                      },
+                      {
+                          "email": "group.pre-purchase@yamibuy.com",
+                          "displayName": "GROUP.Pre-Purchase",
+                          "responseStatus": "needsAction"
+                      },
+                      {
+                          "email": "shan.lu@yamibuy.com",
+                          "responseStatus": "accepted"
+                      },
+                      {
+                          "email": "louise.chen@yamibuy.com",
+                          "responseStatus": "accepted"
+                      }
+                  ],
+                  "hangoutLink": "https://meet.google.com/vep-xxgk-dur",
+                  "conferenceData": {
+                      "entryPoints": [
+                          {
+                              "entryPointType": "video",
+                              "uri": "https://meet.google.com/vep-xxgk-dur",
+                              "label": "meet.google.com/vep-xxgk-dur"
+                          },
+                          {
+                              "entryPointType": "more",
+                              "uri": "https://tel.meet/vep-xxgk-dur?pin=7570257862322",
+                              "pin": "7570257862322"
+                          },
+                          {
+                              "regionCode": "US",
+                              "entryPointType": "phone",
+                              "uri": "tel:+1-513-757-0116",
+                              "label": "+1 513-757-0116",
+                              "pin": "484724684"
+                          }
+                      ],
+                      "conferenceSolution": {
+                          "key": {
+                              "type": "hangoutsMeet"
+                          },
+                          "name": "Google Meet",
+                          "iconUri": "https://fonts.gstatic.com/s/i/productlogos/meet_2020q4/v6/web-512dp/logo_meet_2020q4_color_2x_web_512dp.png"
+                      },
+                      "conferenceId": "vep-xxgk-dur"
+                  },
+                  "reminders": {
+                      "useDefault": false,
+                      "overrides": [
+                          {
+                              "method": "popup",
+                              "minutes": 5
+                          }
+                      ]
+                  },
+                  "attachments": [
+                      {
+                          "fileUrl": "https://docs.google.com/document/d/1OJ1eof5FNQ3vM5pWWumeFS_8oKsGqS-9HfWVJi24wYY/edit",
+                          "title": "记录 - per-purchase 每日站会",
+                          "mimeType": "application/vnd.google-apps.document",
+                          "iconLink": "https://drive-thirdparty.googleusercontent.com/16/type/application/vnd.google-apps.document",
+                          "fileId": "1OJ1eof5FNQ3vM5pWWumeFS_8oKsGqS-9HfWVJi24wYY"
+                      }
+                  ],
+                  "eventType": "default"
+              }
+          ]
+      },
+      {
+          "date": "9月10号",
+          "events": [
+              {
+                  "kind": "calendar#event",
+                  "etag": "\"3431413633587000\"",
+                  "id": "lniktj4f4l7robsis9s4322b7f_20240910T020000Z",
+                  "status": "confirmed",
+                  "htmlLink": "https://www.google.com/calendar/event?eid=bG5pa3RqNGY0bDdyb2JzaXM5czQzMjJiN2ZfMjAyNDA5MTBUMDIwMDAwWiBlcmljLnpob3VAeWFtaWJ1eS5jb20",
+                  "created": "2023-10-10T01:38:16.000Z",
+                  "updated": "2024-08-04T08:06:23.917Z",
+                  "summary": "per-purchase 每日站会",
+                  "description": "<ul><li><p><b>昨天做了什么（What did I do yesterday）</b>： 每个团队成员都会简要回顾他们在前一天的工作中完成了哪些任务或工作项。这有助于团队了解进度和成就。</p></li><li><p><b>今天将要做什么（What will I do today）</b>： 成员会分享他们计划在当天要完成的任务。这有助于团队了解谁将在哪些方面工作，以确保团队的工作在正确的方向上推进。</p></li><li><p><b>是否有任何阻碍或问题（Are there any blockers or impediments）</b>： 如果团队成员遇到了任何问题或阻碍，他们应该在站会上提出，并寻求团队的支持和解决方案。</p></li></ul>",
+                  "location": "西安-6-Ohio (9)",
+                  "creator": {
+                      "email": "eric.zhou@yamibuy.com",
+                      "self": true
+                  },
+                  "organizer": {
+                      "email": "eric.zhou@yamibuy.com",
+                      "self": true
+                  },
+                  "start": {
+                      "dateTime": "2024-09-10T10:00:00+08:00",
+                      "timeZone": "Asia/Shanghai"
+                  },
+                  "end": {
+                      "dateTime": "2024-09-10T10:15:00+08:00",
+                      "timeZone": "Asia/Shanghai"
+                  },
+                  "recurringEventId": "lniktj4f4l7robsis9s4322b7f",
+                  "originalStartTime": {
+                      "dateTime": "2024-09-10T10:00:00+08:00",
+                      "timeZone": "Asia/Shanghai"
+                  },
+                  "iCalUID": "lniktj4f4l7robsis9s4322b7f@google.com",
+                  "sequence": 2,
+                  "attendees": [
+                      {
+                          "email": "yamibuy.com_37343137313134383338@resource.calendar.google.com",
+                          "displayName": "西安-6-Ohio (9)",
+                          "resource": true,
+                          "responseStatus": "accepted"
+                      },
+                      {
+                          "email": "eric.zhou@yamibuy.com",
+                          "organizer": true,
+                          "self": true,
+                          "responseStatus": "accepted"
+                      },
+                      {
+                          "email": "group.pre-purchase@yamibuy.com",
+                          "displayName": "GROUP.Pre-Purchase",
+                          "responseStatus": "needsAction"
+                      },
+                      {
+                          "email": "shan.lu@yamibuy.com",
+                          "responseStatus": "accepted"
+                      },
+                      {
+                          "email": "louise.chen@yamibuy.com",
+                          "responseStatus": "accepted"
+                      }
+                  ],
+                  "hangoutLink": "https://meet.google.com/vep-xxgk-dur",
+                  "conferenceData": {
+                      "entryPoints": [
+                          {
+                              "entryPointType": "video",
+                              "uri": "https://meet.google.com/vep-xxgk-dur",
+                              "label": "meet.google.com/vep-xxgk-dur"
+                          },
+                          {
+                              "entryPointType": "more",
+                              "uri": "https://tel.meet/vep-xxgk-dur?pin=7570257862322",
+                              "pin": "7570257862322"
+                          },
+                          {
+                              "regionCode": "US",
+                              "entryPointType": "phone",
+                              "uri": "tel:+1-513-757-0116",
+                              "label": "+1 513-757-0116",
+                              "pin": "484724684"
+                          }
+                      ],
+                      "conferenceSolution": {
+                          "key": {
+                              "type": "hangoutsMeet"
+                          },
+                          "name": "Google Meet",
+                          "iconUri": "https://fonts.gstatic.com/s/i/productlogos/meet_2020q4/v6/web-512dp/logo_meet_2020q4_color_2x_web_512dp.png"
+                      },
+                      "conferenceId": "vep-xxgk-dur"
+                  },
+                  "reminders": {
+                      "useDefault": false,
+                      "overrides": [
+                          {
+                              "method": "popup",
+                              "minutes": 5
+                          }
+                      ]
+                  },
+                  "attachments": [
+                      {
+                          "fileUrl": "https://docs.google.com/document/d/1OJ1eof5FNQ3vM5pWWumeFS_8oKsGqS-9HfWVJi24wYY/edit",
+                          "title": "记录 - per-purchase 每日站会",
+                          "mimeType": "application/vnd.google-apps.document",
+                          "iconLink": "https://drive-thirdparty.googleusercontent.com/16/type/application/vnd.google-apps.document",
+                          "fileId": "1OJ1eof5FNQ3vM5pWWumeFS_8oKsGqS-9HfWVJi24wYY"
+                      }
+                  ],
+                  "eventType": "default"
+              }
+          ]
+      },
+      {
+          "date": "9月10号",
+          "events": [
+              {
+                  "kind": "calendar#event",
+                  "etag": "\"3451382135018000\"",
+                  "id": "3794squ0ek67kufgd6thv35kts",
+                  "status": "confirmed",
+                  "htmlLink": "https://www.google.com/calendar/event?eid=Mzc5NHNxdTBlazY3a3VmZ2Q2dGh2MzVrdHMgZXJpYy56aG91QHlhbWlidXkuY29t",
+                  "created": "2024-09-07T06:37:46.000Z",
+                  "updated": "2024-09-07T06:37:47.509Z",
+                  "summary": "TTBI as Experiment Guard-rails",
+                  "description": "<ol><li>必要性：目前是否已有存在的案例</li><li>执行：<ul><li>步骤</li><li>风险点</li><li>资源及时间线</li></ul></li><li>其他</li></ol>",
+                  "creator": {
+                      "email": "emma.luo@yamibuy.com",
+                      "displayName": "Emma Luo"
+                  },
+                  "organizer": {
+                      "email": "emma.luo@yamibuy.com",
+                      "displayName": "Emma Luo"
+                  },
+                  "start": {
+                      "dateTime": "2024-09-10T10:30:00+08:00",
+                      "timeZone": "Asia/Shanghai"
+                  },
+                  "end": {
+                      "dateTime": "2024-09-10T11:30:00+08:00",
+                      "timeZone": "Asia/Shanghai"
+                  },
+                  "iCalUID": "3794squ0ek67kufgd6thv35kts@google.com",
+                  "sequence": 0,
+                  "attendees": [
+                      {
+                          "email": "emma.luo@yamibuy.com",
+                          "displayName": "Emma Luo",
+                          "organizer": true,
+                          "responseStatus": "accepted"
+                      },
+                      {
+                          "email": "eric.zhou@yamibuy.com",
+                          "self": true,
+                          "responseStatus": "needsAction"
+                      },
+                      {
+                          "email": "hoolwall.wu@yamibuy.com",
+                          "responseStatus": "needsAction"
+                      }
+                  ],
+                  "hangoutLink": "https://meet.google.com/ahk-hwda-vst",
+                  "conferenceData": {
+                      "entryPoints": [
+                          {
+                              "entryPointType": "video",
+                              "uri": "https://meet.google.com/ahk-hwda-vst",
+                              "label": "meet.google.com/ahk-hwda-vst"
+                          },
+                          {
+                              "entryPointType": "more",
+                              "uri": "https://tel.meet/ahk-hwda-vst?pin=7810675279708",
+                              "pin": "7810675279708"
+                          },
+                          {
+                              "regionCode": "US",
+                              "entryPointType": "phone",
+                              "uri": "tel:+1-470-299-1888",
+                              "label": "+1 470-299-1888",
+                              "pin": "269648768"
+                          }
+                      ],
+                      "conferenceSolution": {
+                          "key": {
+                              "type": "hangoutsMeet"
+                          },
+                          "name": "Google Meet",
+                          "iconUri": "https://fonts.gstatic.com/s/i/productlogos/meet_2020q4/v6/web-512dp/logo_meet_2020q4_color_2x_web_512dp.png"
+                      },
+                      "conferenceId": "ahk-hwda-vst"
+                  },
+                  "reminders": {
+                      "useDefault": true
+                  },
+                  "attachments": [
+                      {
+                          "fileUrl": "https://docs.google.com/document/d/1Yf_KeKkzMEdmSXk0fXEJdaroaifaD1TC9x8aZnUifX4/edit",
+                          "title": "Notes - TTBI as Experiment Guard-rails",
+                          "mimeType": "application/vnd.google-apps.document",
+                          "iconLink": "https://drive-thirdparty.googleusercontent.com/16/type/application/vnd.google-apps.document",
+                          "fileId": "1Yf_KeKkzMEdmSXk0fXEJdaroaifaD1TC9x8aZnUifX4"
+                      }
+                  ],
+                  "eventType": "default"
+              }
+          ]
+      },
+      {
+          "date": "9月10号",
+          "events": [
+              {
+                  "kind": "calendar#event",
+                  "etag": "\"3450669242614000\"",
+                  "id": "57m0od5vte8545acu0c2q7ump0_20240910T044000Z",
+                  "status": "confirmed",
+                  "htmlLink": "https://www.google.com/calendar/event?eid=NTdtMG9kNXZ0ZTg1NDVhY3UwYzJxN3VtcDBfMjAyNDA5MTBUMDQ0MDAwWiBlcmljLnpob3VAeWFtaWJ1eS5jb20",
+                  "created": "2024-08-22T01:20:02.000Z",
+                  "updated": "2024-09-03T03:37:01.307Z",
+                  "summary": "MIS周会",
+                  "description": "<table><tbody><tr><td><table><tbody><tr><td><br><a href=\"https://docs.google.com/document/d/1gErEqytLcG7zXo2CuM57g_1xBGbEyzP4G8kW0IPE-B8/edit#heading=h.68h8vdfxdlb\" target=\"_blank\" class=\"pastedDriveLink-0\">https://docs.google.com/<wbr />document/d/<wbr />1gErEqytLcG7zXo2CuM57g_<wbr />1xBGbEyzP4G8kW0IPE-B8/edit#<wbr />heading=h.68h8vdfxdlb</a></td></tr></tbody></table></td></tr></tbody></table>",
+                  "creator": {
+                      "email": "freegod.xu@yamibuy.com"
+                  },
+                  "organizer": {
+                      "email": "freegod.xu@yamibuy.com"
+                  },
+                  "start": {
+                      "dateTime": "2024-09-10T12:40:00+08:00",
+                      "timeZone": "Asia/Shanghai"
+                  },
+                  "end": {
+                      "dateTime": "2024-09-10T13:40:00+08:00",
+                      "timeZone": "Asia/Shanghai"
+                  },
+                  "recurringEventId": "57m0od5vte8545acu0c2q7ump0_R20240827T044000",
+                  "originalStartTime": {
+                      "dateTime": "2024-09-10T12:40:00+08:00",
+                      "timeZone": "Asia/Shanghai"
+                  },
+                  "iCalUID": "57m0od5vte8545acu0c2q7ump0_R20240827T044000@google.com",
+                  "sequence": 0,
+                  "attendees": [
+                      {
+                          "email": "jason.huo@yamibuy.com",
+                          "responseStatus": "needsAction"
+                      },
+                      {
+                          "email": "little.lyu@yamibuy.com",
+                          "responseStatus": "accepted"
+                      },
+                      {
+                          "email": "jie.weng@yamibuy.com",
+                          "responseStatus": "needsAction"
+                      },
+                      {
+                          "email": "freegod.xu@yamibuy.com",
+                          "organizer": true,
+                          "responseStatus": "accepted"
+                      },
+                      {
+                          "email": "eric.zhou@yamibuy.com",
+                          "self": true,
+                          "responseStatus": "needsAction"
+                      },
+                      {
+                          "email": "group.it.xa.leader@yamibuy.com",
+                          "displayName": "GROUP.IT.XA.LEADER",
+                          "responseStatus": "needsAction"
+                      }
+                  ],
+                  "hangoutLink": "https://meet.google.com/vxz-kjgm-ukd",
+                  "conferenceData": {
+                      "entryPoints": [
+                          {
+                              "entryPointType": "video",
+                              "uri": "https://meet.google.com/vxz-kjgm-ukd",
+                              "label": "meet.google.com/vxz-kjgm-ukd"
+                          },
+                          {
+                              "entryPointType": "more",
+                              "uri": "https://tel.meet/vxz-kjgm-ukd?pin=9599211827898",
+                              "pin": "9599211827898"
+                          },
+                          {
+                              "regionCode": "US",
+                              "entryPointType": "phone",
+                              "uri": "tel:+1-405-353-0256",
+                              "label": "+1 405-353-0256",
+                              "pin": "225617638"
+                          }
+                      ],
+                      "conferenceSolution": {
+                          "key": {
+                              "type": "hangoutsMeet"
+                          },
+                          "name": "Google Meet",
+                          "iconUri": "https://fonts.gstatic.com/s/i/productlogos/meet_2020q4/v6/web-512dp/logo_meet_2020q4_color_2x_web_512dp.png"
+                      },
+                      "conferenceId": "vxz-kjgm-ukd"
+                  },
+                  "reminders": {
+                      "useDefault": true
+                  },
+                  "attachments": [
+                      {
+                          "fileUrl": "https://docs.google.com/document/d/1po6hA36WMFaD1vFTFid3HBgS5ztvKI9TQPMhCI0Qux0/edit",
+                          "title": "会议记录 - MIS周会",
+                          "mimeType": "application/vnd.google-apps.document",
+                          "iconLink": "https://drive-thirdparty.googleusercontent.com/16/type/application/vnd.google-apps.document",
+                          "fileId": "1po6hA36WMFaD1vFTFid3HBgS5ztvKI9TQPMhCI0Qux0"
+                      }
+                  ],
+                  "eventType": "default"
+              }
+          ]
+      },
+      {
+          "date": "9月11号",
+          "events": [
+              {
+                  "kind": "calendar#event",
+                  "etag": "\"3448924035846000\"",
+                  "id": "645ff28hlqoi3dn4u43c1btivf",
+                  "status": "confirmed",
+                  "htmlLink": "https://www.google.com/calendar/event?eid=NjQ1ZmYyOGhscW9pM2RuNHU0M2MxYnRpdmYgZXJpYy56aG91QHlhbWlidXkuY29t",
+                  "created": "2024-08-22T08:43:51.000Z",
+                  "updated": "2024-08-24T01:13:37.923Z",
+                  "summary": "T3 OKR Planning: Pre-purchase and Retention ",
+                  "creator": {
+                      "email": "emma.luo@yamibuy.com",
+                      "displayName": "Emma Luo"
+                  },
+                  "organizer": {
+                      "email": "emma.luo@yamibuy.com",
+                      "displayName": "Emma Luo"
+                  },
+                  "start": {
+                      "dateTime": "2024-09-11T08:00:00+08:00",
+                      "timeZone": "Asia/Shanghai"
+                  },
+                  "end": {
+                      "dateTime": "2024-09-11T09:00:00+08:00",
+                      "timeZone": "Asia/Shanghai"
+                  },
+                  "iCalUID": "645ff28hlqoi3dn4u43c1btivf@google.com",
+                  "sequence": 0,
+                  "attendees": [
+                      {
+                          "email": "divik.wu@yamibuy.com",
+                          "responseStatus": "accepted"
+                      },
+                      {
+                          "email": "emma.luo@yamibuy.com",
+                          "displayName": "Emma Luo",
+                          "organizer": true,
+                          "responseStatus": "accepted"
+                      },
+                      {
+                          "email": "eric.zhou@yamibuy.com",
+                          "self": true,
+                          "responseStatus": "needsAction"
+                      },
+                      {
+                          "email": "rick.zhao@yamibuy.com",
+                          "responseStatus": "accepted"
+                      },
+                      {
+                          "email": "jie.weng@yamibuy.com",
+                          "responseStatus": "needsAction"
+                      },
+                      {
+                          "email": "heidi.he@yamibuy.com",
+                          "responseStatus": "needsAction"
+                      },
+                      {
+                          "email": "kevin.wang@yamibuy.com",
+                          "responseStatus": "needsAction"
+                      },
+                      {
+                          "email": "freegod.xu@yamibuy.com",
+                          "responseStatus": "needsAction"
+                      },
+                      {
+                          "email": "louise.chen@yamibuy.com",
+                          "responseStatus": "needsAction"
+                      }
+                  ],
+                  "hangoutLink": "https://meet.google.com/hzs-jkjd-wzo",
+                  "conferenceData": {
+                      "entryPoints": [
+                          {
+                              "entryPointType": "video",
+                              "uri": "https://meet.google.com/hzs-jkjd-wzo",
+                              "label": "meet.google.com/hzs-jkjd-wzo"
+                          },
+                          {
+                              "entryPointType": "more",
+                              "uri": "https://tel.meet/hzs-jkjd-wzo?pin=2738636379192",
+                              "pin": "2738636379192"
+                          },
+                          {
+                              "regionCode": "US",
+                              "entryPointType": "phone",
+                              "uri": "tel:+1-513-788-2052",
+                              "label": "+1 513-788-2052",
+                              "pin": "507229534"
+                          }
+                      ],
+                      "conferenceSolution": {
+                          "key": {
+                              "type": "hangoutsMeet"
+                          },
+                          "name": "Google Meet",
+                          "iconUri": "https://fonts.gstatic.com/s/i/productlogos/meet_2020q4/v6/web-512dp/logo_meet_2020q4_color_2x_web_512dp.png"
+                      },
+                      "conferenceId": "hzs-jkjd-wzo"
+                  },
+                  "reminders": {
+                      "useDefault": true
+                  },
+                  "eventType": "default"
+              }
+          ]
+      },
+      {
+          "date": "9月11号",
+          "events": [
+              {
+                  "kind": "calendar#event",
+                  "etag": "\"3451289545258000\"",
+                  "id": "mv0elug7ci68qjpq18l8hvn95p_20240911T000000Z",
+                  "status": "confirmed",
+                  "htmlLink": "https://www.google.com/calendar/event?eid=bXYwZWx1ZzdjaTY4cWpwcTE4bDhodm45NXBfMjAyNDA5MTFUMDAwMDAwWiBlcmljLnpob3VAeWFtaWJ1eS5jb20",
+                  "created": "2022-04-06T04:17:39.000Z",
+                  "updated": "2024-09-06T17:46:12.629Z",
+                  "summary": "[Weekly] Cross Team Meeting (Scrum of Scrums)",
+                  "description": "<u></u><ul><li>Update Key Project Status<br></li><li>Discuss Cross Channel Project Dependencies<br></li><li>Discuss Cross Team Challenges<br></li><li>Track OKRs</li></ul><u></u><u></u>",
+                  "creator": {
+                      "email": "jie.weng@yamibuy.com"
+                  },
+                  "organizer": {
+                      "email": "kevin.wang@yamibuy.com"
+                  },
+                  "start": {
+                      "dateTime": "2024-09-11T08:00:00+08:00",
+                      "timeZone": "America/Los_Angeles"
+                  },
+                  "end": {
+                      "dateTime": "2024-09-11T09:00:00+08:00",
+                      "timeZone": "America/Los_Angeles"
+                  },
+                  "recurringEventId": "mv0elug7ci68qjpq18l8hvn95p_R20240605T000000",
+                  "originalStartTime": {
+                      "dateTime": "2024-09-11T08:00:00+08:00",
+                      "timeZone": "America/Los_Angeles"
+                  },
+                  "iCalUID": "mv0elug7ci68qjpq18l8hvn95p_R20240605T000000@google.com",
+                  "sequence": 9,
+                  "attendees": [
+                      {
+                          "email": "nico.wu@yamibuy.com",
+                          "displayName": "Nico Wu",
+                          "responseStatus": "accepted"
+                      },
+                      {
+                          "email": "kevin.wang@yamibuy.com",
+                          "organizer": true,
+                          "responseStatus": "accepted"
+                      },
+                      {
+                          "email": "erin.lin@yamibuy.com",
+                          "responseStatus": "accepted"
+                      },
+                      {
+                          "email": "simon.miao@yamibuy.com",
+                          "responseStatus": "needsAction"
+                      },
+                      {
+                          "email": "freegod.xu@yamibuy.com",
+                          "responseStatus": "needsAction"
+                      },
+                      {
+                          "email": "emma.luo@yamibuy.com",
+                          "displayName": "Emma Luo",
+                          "responseStatus": "accepted"
+                      },
+                      {
+                          "email": "markin.li@yamibuy.com",
+                          "responseStatus": "needsAction"
+                      },
+                      {
+                          "email": "little.lyu@yamibuy.com",
+                          "responseStatus": "needsAction"
+                      },
+                      {
+                          "email": "ivy.wang@yamibuy.com",
+                          "responseStatus": "accepted"
+                      },
+                      {
+                          "email": "jason.huo@yamibuy.com",
+                          "responseStatus": "needsAction"
+                      },
+                      {
+                          "email": "shan.lu@yamibuy.com",
+                          "responseStatus": "accepted"
+                      },
+                      {
+                          "email": "shihao.yang@yamibuy.com",
+                          "responseStatus": "needsAction"
+                      },
+                      {
+                          "email": "jie.weng@yamibuy.com",
+                          "responseStatus": "accepted"
+                      },
+                      {
+                          "email": "carey.li@yamibuy.com",
+                          "responseStatus": "accepted"
+                      },
+                      {
+                          "email": "rong.fan@yamibuy.com",
+                          "responseStatus": "needsAction"
+                      },
+                      {
+                          "email": "stella.wang@yamibuy.com",
+                          "responseStatus": "accepted"
+                      },
+                      {
+                          "email": "grouppmad@yamibuy.com",
+                          "displayName": "GROUP.PMAD",
+                          "responseStatus": "needsAction"
+                      },
+                      {
+                          "email": "aaron.lu@yamibuy.com",
+                          "responseStatus": "needsAction"
+                      },
+                      {
+                          "email": "alice.fang@yamibuy.com",
+                          "responseStatus": "accepted"
+                      },
+                      {
+                          "email": "daniel.zhou@yamibuy.com",
+                          "responseStatus": "accepted"
+                      },
+                      {
+                          "email": "lisa.liang@yamibuy.com",
+                          "responseStatus": "accepted"
+                      },
+                      {
+                          "email": "waylon.tian@yamibuy.com",
+                          "responseStatus": "needsAction"
+                      },
+                      {
+                          "email": "kyle.yao@yamibuy.com",
+                          "responseStatus": "needsAction"
+                      },
+                      {
+                          "email": "hoolwall.wu@yamibuy.com",
+                          "responseStatus": "needsAction"
+                      },
+                      {
+                          "email": "leon.liang@yamibuy.com",
+                          "responseStatus": "needsAction"
+                      },
+                      {
+                          "email": "eric.zhou@yamibuy.com",
+                          "self": true,
+                          "responseStatus": "needsAction"
+                      },
+                      {
+                          "email": "william.he@yamibuy.com",
+                          "responseStatus": "needsAction"
+                      },
+                      {
+                          "email": "gavin.wang@yamibuy.com",
+                          "responseStatus": "needsAction"
+                      },
+                      {
+                          "email": "sally.jia@yamibuy.com",
+                          "responseStatus": "declined"
+                      },
+                      {
+                          "email": "starrk.sang@yamibuy.com",
+                          "responseStatus": "needsAction"
+                      },
+                      {
+                          "email": "andrea.chau@yamibuy.com",
+                          "optional": true,
+                          "responseStatus": "needsAction"
+                      }
+                  ],
+                  "hangoutLink": "https://meet.google.com/rir-guso-ims",
+                  "conferenceData": {
+                      "entryPoints": [
+                          {
+                              "entryPointType": "video",
+                              "uri": "https://meet.google.com/rir-guso-ims",
+                              "label": "meet.google.com/rir-guso-ims"
+                          },
+                          {
+                              "entryPointType": "more",
+                              "uri": "https://tel.meet/rir-guso-ims?pin=4903969121414",
+                              "pin": "4903969121414"
+                          },
+                          {
+                              "regionCode": "US",
+                              "entryPointType": "phone",
+                              "uri": "tel:+1-916-245-9451",
+                              "label": "+1 916-245-9451",
+                              "pin": "424460588"
+                          }
+                      ],
+                      "conferenceSolution": {
+                          "key": {
+                              "type": "hangoutsMeet"
+                          },
+                          "name": "Google Meet",
+                          "iconUri": "https://fonts.gstatic.com/s/i/productlogos/meet_2020q4/v6/web-512dp/logo_meet_2020q4_color_2x_web_512dp.png"
+                      },
+                      "conferenceId": "rir-guso-ims"
+                  },
+                  "guestsCanModify": true,
+                  "reminders": {
+                      "useDefault": true
+                  },
+                  "attachments": [
+                      {
+                          "fileUrl": "https://drive.google.com/open?id=1eoYK4LLjMorbrojwiH5tzxrmRTBoasRKI2laB2FSQmE&authuser=1",
+                          "title": "Cross Team Meeting Notes",
+                          "mimeType": "application/vnd.google-apps.document",
+                          "iconLink": "https://drive-thirdparty.googleusercontent.com/32/type/application/vnd.google-apps.document",
+                          "fileId": "1eoYK4LLjMorbrojwiH5tzxrmRTBoasRKI2laB2FSQmE"
+                      }
+                  ],
+                  "eventType": "default"
+              }
+          ]
+      },
+      {
+          "date": "9月11号",
+          "events": [
+              {
+                  "kind": "calendar#event",
+                  "etag": "\"3431413633587000\"",
+                  "id": "lniktj4f4l7robsis9s4322b7f_20240911T020000Z",
+                  "status": "confirmed",
+                  "htmlLink": "https://www.google.com/calendar/event?eid=bG5pa3RqNGY0bDdyb2JzaXM5czQzMjJiN2ZfMjAyNDA5MTFUMDIwMDAwWiBlcmljLnpob3VAeWFtaWJ1eS5jb20",
+                  "created": "2023-10-10T01:38:16.000Z",
+                  "updated": "2024-08-04T08:06:23.917Z",
+                  "summary": "per-purchase 每日站会",
+                  "description": "<ul><li><p><b>昨天做了什么（What did I do yesterday）</b>： 每个团队成员都会简要回顾他们在前一天的工作中完成了哪些任务或工作项。这有助于团队了解进度和成就。</p></li><li><p><b>今天将要做什么（What will I do today）</b>： 成员会分享他们计划在当天要完成的任务。这有助于团队了解谁将在哪些方面工作，以确保团队的工作在正确的方向上推进。</p></li><li><p><b>是否有任何阻碍或问题（Are there any blockers or impediments）</b>： 如果团队成员遇到了任何问题或阻碍，他们应该在站会上提出，并寻求团队的支持和解决方案。</p></li></ul>",
+                  "location": "西安-6-Ohio (9)",
+                  "creator": {
+                      "email": "eric.zhou@yamibuy.com",
+                      "self": true
+                  },
+                  "organizer": {
+                      "email": "eric.zhou@yamibuy.com",
+                      "self": true
+                  },
+                  "start": {
+                      "dateTime": "2024-09-11T10:00:00+08:00",
+                      "timeZone": "Asia/Shanghai"
+                  },
+                  "end": {
+                      "dateTime": "2024-09-11T10:15:00+08:00",
+                      "timeZone": "Asia/Shanghai"
+                  },
+                  "recurringEventId": "lniktj4f4l7robsis9s4322b7f",
+                  "originalStartTime": {
+                      "dateTime": "2024-09-11T10:00:00+08:00",
+                      "timeZone": "Asia/Shanghai"
+                  },
+                  "iCalUID": "lniktj4f4l7robsis9s4322b7f@google.com",
+                  "sequence": 2,
+                  "attendees": [
+                      {
+                          "email": "yamibuy.com_37343137313134383338@resource.calendar.google.com",
+                          "displayName": "西安-6-Ohio (9)",
+                          "resource": true,
+                          "responseStatus": "accepted"
+                      },
+                      {
+                          "email": "eric.zhou@yamibuy.com",
+                          "organizer": true,
+                          "self": true,
+                          "responseStatus": "accepted"
+                      },
+                      {
+                          "email": "group.pre-purchase@yamibuy.com",
+                          "displayName": "GROUP.Pre-Purchase",
+                          "responseStatus": "needsAction"
+                      },
+                      {
+                          "email": "shan.lu@yamibuy.com",
+                          "responseStatus": "accepted"
+                      },
+                      {
+                          "email": "louise.chen@yamibuy.com",
+                          "responseStatus": "accepted"
+                      }
+                  ],
+                  "hangoutLink": "https://meet.google.com/vep-xxgk-dur",
+                  "conferenceData": {
+                      "entryPoints": [
+                          {
+                              "entryPointType": "video",
+                              "uri": "https://meet.google.com/vep-xxgk-dur",
+                              "label": "meet.google.com/vep-xxgk-dur"
+                          },
+                          {
+                              "entryPointType": "more",
+                              "uri": "https://tel.meet/vep-xxgk-dur?pin=7570257862322",
+                              "pin": "7570257862322"
+                          },
+                          {
+                              "regionCode": "US",
+                              "entryPointType": "phone",
+                              "uri": "tel:+1-513-757-0116",
+                              "label": "+1 513-757-0116",
+                              "pin": "484724684"
+                          }
+                      ],
+                      "conferenceSolution": {
+                          "key": {
+                              "type": "hangoutsMeet"
+                          },
+                          "name": "Google Meet",
+                          "iconUri": "https://fonts.gstatic.com/s/i/productlogos/meet_2020q4/v6/web-512dp/logo_meet_2020q4_color_2x_web_512dp.png"
+                      },
+                      "conferenceId": "vep-xxgk-dur"
+                  },
+                  "reminders": {
+                      "useDefault": false,
+                      "overrides": [
+                          {
+                              "method": "popup",
+                              "minutes": 5
+                          }
+                      ]
+                  },
+                  "attachments": [
+                      {
+                          "fileUrl": "https://docs.google.com/document/d/1OJ1eof5FNQ3vM5pWWumeFS_8oKsGqS-9HfWVJi24wYY/edit",
+                          "title": "记录 - per-purchase 每日站会",
+                          "mimeType": "application/vnd.google-apps.document",
+                          "iconLink": "https://drive-thirdparty.googleusercontent.com/16/type/application/vnd.google-apps.document",
+                          "fileId": "1OJ1eof5FNQ3vM5pWWumeFS_8oKsGqS-9HfWVJi24wYY"
+                      }
+                  ],
+                  "eventType": "default"
+              }
+          ]
+      },
+      {
+          "date": "9月12号",
+          "events": [
+              {
+                  "kind": "calendar#event",
+                  "etag": "\"3450994914922000\"",
+                  "id": "438iigusk8g44768er7hvh6k8l_20240912T010000Z",
+                  "status": "confirmed",
+                  "htmlLink": "https://www.google.com/calendar/event?eid=NDM4aWlndXNrOGc0NDc2OGVyN2h2aDZrOGxfMjAyNDA5MTJUMDEwMDAwWiBlcmljLnpob3VAeWFtaWJ1eS5jb20",
+                  "created": "2024-08-17T02:29:56.000Z",
+                  "updated": "2024-09-05T00:50:57.461Z",
+                  "summary": "Rick×Joanna×Eric例行沟通",
+                  "description": "Rick和Joanna讨论和CE有关的高优先级需求<br>包括未来的开发计划、高优先级解决的问题<br>核心是2件事情：<br>1.讨论的问题/计划<br>2.需要行动的action<br>会议记录在：<br><a href=\"https://docs.google.com/document/d/1jClbTouH4xaCr6kgRciXAhTj9WiSTwZJswf638tN8ho/edit#heading=h.99g3hsv6k0dv\">[CE x PM Meeting Notes]</a>",
+                  "creator": {
+                      "email": "rick.zhao@yamibuy.com"
+                  },
+                  "organizer": {
+                      "email": "rick.zhao@yamibuy.com"
+                  },
+                  "start": {
+                      "dateTime": "2024-09-12T09:00:00+08:00",
+                      "timeZone": "Asia/Shanghai"
+                  },
+                  "end": {
+                      "dateTime": "2024-09-12T10:00:00+08:00",
+                      "timeZone": "Asia/Shanghai"
+                  },
+                  "recurringEventId": "438iigusk8g44768er7hvh6k8l_R20240822T010000",
+                  "originalStartTime": {
+                      "dateTime": "2024-09-12T09:00:00+08:00",
+                      "timeZone": "Asia/Shanghai"
+                  },
+                  "iCalUID": "438iigusk8g44768er7hvh6k8l_R20240822T010000@google.com",
+                  "sequence": 0,
+                  "attendees": [
+                      {
+                          "email": "joanna.li@yamibuy.com",
+                          "responseStatus": "needsAction"
+                      },
+                      {
+                          "email": "rick.zhao@yamibuy.com",
+                          "organizer": true,
+                          "responseStatus": "accepted"
+                      },
+                      {
+                          "email": "eric.zhou@yamibuy.com",
+                          "self": true,
+                          "responseStatus": "accepted"
+                      }
+                  ],
+                  "hangoutLink": "https://meet.google.com/cam-wkmw-gmh",
+                  "conferenceData": {
+                      "entryPoints": [
+                          {
+                              "entryPointType": "video",
+                              "uri": "https://meet.google.com/cam-wkmw-gmh",
+                              "label": "meet.google.com/cam-wkmw-gmh"
+                          },
+                          {
+                              "entryPointType": "more",
+                              "uri": "https://tel.meet/cam-wkmw-gmh?pin=5759684664916",
+                              "pin": "5759684664916"
+                          },
+                          {
+                              "regionCode": "US",
+                              "entryPointType": "phone",
+                              "uri": "tel:+1-336-850-0818",
+                              "label": "+1 336-850-0818",
+                              "pin": "729392460"
+                          }
+                      ],
+                      "conferenceSolution": {
+                          "key": {
+                              "type": "hangoutsMeet"
+                          },
+                          "name": "Google Meet",
+                          "iconUri": "https://fonts.gstatic.com/s/i/productlogos/meet_2020q4/v6/web-512dp/logo_meet_2020q4_color_2x_web_512dp.png"
+                      },
+                      "conferenceId": "cam-wkmw-gmh"
+                  },
+                  "reminders": {
+                      "useDefault": true
+                  },
+                  "eventType": "default"
+              }
+          ]
+      }
+  ]
+}

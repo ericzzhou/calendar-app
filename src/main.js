@@ -12,7 +12,8 @@ const url = require("url");
 const schedule = require("node-schedule");
 const { Notification } = require("electron");
 const path = require("path");
-
+const handlebars = require("handlebars");
+const fs = require("fs");
 let Store;
 
 class MainProcess {
@@ -196,11 +197,108 @@ class MainProcess {
 
     ipcMain.on("calendar-events", (event, events) => {
       this.processEvents(events); // 处理事件并安排提醒
+      this.buildTemplate(events);
     });
 
     ipcMain.on("open-auth-url", (event, authUrl) => {
       shell.openExternal(authUrl);
     });
+  }
+
+  // 事件分组
+  groupEventsByDate(events) {
+    // print(events);
+    const groupedEvents = {
+      today: [],
+      tomorrow: [],
+      upcoming: [],
+    };
+
+    if (events == null || events.length == 0) {
+      return groupedEvents;
+    }
+    const now = new Date();
+    const today = new Date(now.toDateString());
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+
+    events.forEach((event) => {
+      if (event.start && event.start.dateTime) {
+        const eventStart = new Date(event.start.dateTime);
+
+        if (eventStart.toDateString() === today.toDateString()) {
+          groupedEvents.today.push(event);
+        } else if (eventStart.toDateString() === tomorrow.toDateString()) {
+          groupedEvents.tomorrow.push(event);
+        } else {
+          groupedEvents.upcoming.push({
+            date: `${eventStart.getMonth() + 1}月${eventStart.getDate()}号`,
+            events: [event],
+          });
+        }
+      }
+    });
+
+    return groupedEvents;
+  }
+
+   /**
+   * 获取指定日期的星期几
+   * @param {string|Date} dateTime - 日期时间字符串或 Date 对象
+   * @returns {string} - 星期几的名称
+   */
+   getDayOfWeek(dateTime) {
+    const date = new Date(dateTime);
+    const options = {
+      weekday: "long", // 使用 "short" 可以获取缩写，例如 "Mon"
+    };
+    return date.toLocaleDateString("zh-CN", options); // 返回中文的星期几名称，例如 "星期一"
+  }
+
+  formatRenderData(groupedEvents) {
+    const events = [];
+    if (groupedEvents.today.length > 0) {
+      events.push({
+        date: "今天",
+        DayOfWeek: this.getDayOfWeek(groupedEvents.today[0].start.dateTime),
+        events: groupedEvents.today,
+      });
+    }
+    if (groupedEvents.tomorrow.length > 0) {
+      events.push({
+        date: "明天",
+        DayOfWeek: this.getDayOfWeek(groupedEvents.tomorrow[0].start.dateTime),
+        events: groupedEvents.tomorrow,
+      });
+    }
+    groupedEvents.upcoming.forEach((group) => {
+      // 如果group.date 已经存在于 events, 则只需要追加 events
+      const existingGroup = events.find((e) => e.date === group.date);
+      if (existingGroup) {
+        existingGroup.events.push(...group.events);
+        return;
+      }
+
+      events.push({
+        date: group.date,
+        DayOfWeek: this.getDayOfWeek(group.events[0].start.dateTime),
+        events: group.events,
+      });
+    });
+
+  }
+  buildTemplate(events) {
+    const group = this.groupEventsByDate(events);
+    const data = this.formatRenderData(group);
+
+    const templatePath = path.join(__dirname, "index.hbs");
+    const templateSource = fs.readFileSync(templatePath, "utf8");
+    const template = handlebars.compile(templateSource);
+
+    
+
+    const html = template(data);
+    this.win.webContents.send("html", html);
   }
 
   async setStore(storeName, storeValue) {
@@ -219,11 +317,9 @@ class MainProcess {
     this.httpServer = http.createServer((req, res) => {
       const queryObject = url.parse(req.url, true).query;
       if (queryObject.code) {
-        console.log("Google 授权成功")
+        console.log("Google 授权成功");
         res.writeHead(200, { "Content-Type": "text/plain" });
-        res.end(
-          "Authorization successful! You can close this window."
-        );
+        res.end("Authorization successful! You can close this window.");
 
         this.win.webContents.send("auth-code", queryObject.code);
         // this.httpServer.close();
@@ -254,7 +350,6 @@ class MainProcess {
       });
     }
 
-    
     // 刷新事件间隔：分钟
     await this.setStore("eventInterval", this.configuration.eventInterval);
 

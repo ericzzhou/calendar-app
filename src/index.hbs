@@ -1,0 +1,17 @@
+<!-- template.hbs -->
+{{#each this}}
+<h3>{{date}} {{DayOfWeek}}</h3>
+<div class="event">
+    {{#each events}}
+    <div class="event-container">
+        <div class="event-time">15:00 <br> 2 小时</div>
+        <div class="event-summary">
+            <strong>{{summary}}</strong>
+            <span>{{creator.email}}</span>
+
+        </div>
+    </div>
+    {{/each}}
+
+</div>
+{{/each}}
