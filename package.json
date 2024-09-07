@@ -3,7 +3,7 @@
   "productName": "calendar-app",
   "description": "calendar-app 日程提醒",
   "keywords": [],
-  "main": "./main.js",
+  "main": "./src/main.js",
   "version": "1.0.0",
   "author": "ericz",
   "scripts": {
@@ -14,15 +14,9 @@
     "appId": "com.zhouzk.calendarapp",
     "productName": "calendar-app",
     "files": [
-      "dist/**/*",
+      "src/**/*",
       "node_modules/**/*",
-      "build/icons/**",
-      "package.json",
-      "index.html",
-      "main.js",
-      "preload.js",
-      "renderer.js",
-      "styles.css"
+      "build/**/*"
     ],
     "directories": {
       "output": "release"

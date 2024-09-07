@@ -52,7 +52,7 @@ class MainProcess {
       
     });
 
-    this.win.loadFile("index.html");
+    this.win.loadFile(`${__dirname}/index.html`);
   }
 
   scheduleNotification(event) {
@@ -141,7 +141,7 @@ class MainProcess {
     });
   }
   createTray() {
-    const iconPath = path.join(__dirname, "build/icons/Martz90-Circle-Calendar.512.png"); // 你自己的托盘图标路径
+    const iconPath = path.join(__dirname, "../","build/icons/Martz90-Circle-Calendar.512.png"); // 你自己的托盘图标路径
     this.tray = new Tray(iconPath);
 
     // 双击托盘图标时显示主窗口
