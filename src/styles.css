@@ -1,19 +1,12 @@
 body {
-  font-family: Arial, sans-serif;
+  font-family: "Microsoft YaHei", Arial, sans-serif;
   font-size: 12px;
+  margin: 4px;
 }
 
 #eventList {
   list-style-type: none;
   padding: 0;
-}
-
-#eventList li {
-  margin-bottom: 15px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  background-color: #f9f9f9;
 }
 
 #authButton {
@@ -30,17 +23,20 @@ body {
   background-color: #45a049;
 }
 
+.event:hover{
+  background-color: #ccc;
+  cursor: pointer;
+}
 .event-container {
   display: flex;
   justify-content: space-between; /* 在主轴（水平轴）上分配空白空间 */
   align-items: center; /* 在交叉轴（垂直轴）上对齐 */
-  border: 1px solid #ccc; /* 边框，方便查看布局效果 */
-  padding: 2px; /* 内边距 */
+  padding: 4px; /* 内边距 */
   
 }
 
 .event-time {
-  padding: 1px; /* 内边距 */
+  padding: 4px; /* 内边距 */
   width: 50px; /* 固定宽度 */
   text-align: left; /* 内容居中对齐 */
 }
@@ -48,7 +44,7 @@ body {
 .event-summary {
   padding: 1px; /* 内边距 */
   flex: 1; /* 宽度自适应 */
-  margin-left: 5px; /* 左边距，避免和事件时间重叠 */
+  
 }
 
 /* 全局隐藏滚动条 */
@@ -65,4 +61,14 @@ body {
 /* 隐藏滚动条 */
 .element::-webkit-scrollbar {
   display: none;
+}
+
+.event .event-container .event-summary strong,
+.event .event-container .event-summary span{
+  display: block;
+}
+
+.event .event-container .event-summary span{
+  color: #878383;
+  margin-top: 4px;
 }

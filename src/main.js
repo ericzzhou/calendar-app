@@ -14,7 +14,7 @@ const { Notification } = require("electron");
 const path = require("path");
 
 let Store;
-const httpServerPort = 12345;
+
 class MainProcess {
   constructor() {
     this.store = null;

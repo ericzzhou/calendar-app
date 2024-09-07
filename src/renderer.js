@@ -16,7 +16,6 @@ class RenderProcess {
      * google oauth token
      */
     this.googleOauthToken = null;
-    
   }
 
   /**
@@ -78,6 +77,20 @@ class RenderProcess {
       this.init();
     });
   }
+
+  /**
+   * 获取指定日期的星期几
+   * @param {string|Date} dateTime - 日期时间字符串或 Date 对象
+   * @returns {string} - 星期几的名称
+   */
+  getDayOfWeek(dateTime) {
+    const date = new Date(dateTime);
+    const options = {
+      weekday: "long", // 使用 "short" 可以获取缩写，例如 "Mon"
+    };
+    return date.toLocaleDateString("zh-CN", options); // 返回中文的星期几名称，例如 "星期一"
+  }
+
   // 格式化日期时间
   formatDateTime(dateTime) {
     const options = {
@@ -99,18 +112,18 @@ class RenderProcess {
 
     // 如果持续时间小于60分钟，直接返回 xx分钟
     if (duration < 60) {
-      return `${duration}分钟`;
+      return `${duration} 分钟`;
     }
 
     // 如果持续时间是60分钟的倍数，返回 xx小时
     if (duration % 60 === 0) {
       const hours = duration / 60;
-      return `${hours}小时`;
+      return `${hours} 小时`;
     }
 
     // 否则返回 xx.xx小时，保留两位小数
     const hours = (duration / 60).toFixed(2);
-    return `${hours}小时`;
+    return `${hours} 小时`;
   }
 
   // 事件分组
@@ -172,7 +185,11 @@ class RenderProcess {
         event.start.dateTime,
         event.end.dateTime
       )}</div>
-          <div class="event-summary">${event.summary}</div>
+          <div class="event-summary">
+          <strong>${event.summary}</strong>
+          <span>${event.creator.email}</span>
+          
+          </div>
           </div>
       `;
       return div;
@@ -181,7 +198,7 @@ class RenderProcess {
     if (groupedEvents.today.length > 0) {
       const todaySection = document.createElement("div");
       todaySection.classList.add("section");
-      todaySection.innerHTML = "<h3>今天</h3>";
+      todaySection.innerHTML = `<h3>今天 ${this.getDayOfWeek(groupedEvents.today[0].start.dateTime)}</h3>`;
       groupedEvents.today.forEach((event) =>
         todaySection.appendChild(createEventElement(event))
       );
@@ -191,7 +208,7 @@ class RenderProcess {
     if (groupedEvents.tomorrow.length > 0) {
       const tomorrowSection = document.createElement("div");
       tomorrowSection.classList.add("section");
-      tomorrowSection.innerHTML = "<h3>明天</h3>";
+      tomorrowSection.innerHTML = `<h3>明天 ${this.getDayOfWeek(groupedEvents.tomorrow[0].start.dateTime)}</h3>`;
       groupedEvents.tomorrow.forEach((event) =>
         tomorrowSection.appendChild(createEventElement(event))
       );
@@ -201,7 +218,7 @@ class RenderProcess {
     groupedEvents.upcoming.forEach((group) => {
       const upcomingSection = document.createElement("div");
       upcomingSection.classList.add("section");
-      upcomingSection.innerHTML = `<h3>${group.date}</h3>`;
+      upcomingSection.innerHTML = `<h3>${group.date} ${this.getDayOfWeek(group.events[0].start.dateTime)}</h3>`;
       group.events.forEach((event) =>
         upcomingSection.appendChild(createEventElement(event))
       );
@@ -220,7 +237,7 @@ class RenderProcess {
     if (!this.googleOauthToken) {
       return;
     }
-    
+
     document.getElementById("authButton").style.display = "none";
 
     const calendar = google.calendar({
@@ -250,8 +267,6 @@ class RenderProcess {
     const containerHtml = this.renderGroupedEvents(groupedEvents);
     console.log("containerHtml", containerHtml);
     document.getElementById("eventList").innerHTML = containerHtml;
-
-    
   }
 
   async init() {
@@ -260,8 +275,6 @@ class RenderProcess {
     this.onMainEvent();
     this.onPageEvent();
     this.getAndRenderEvents();
-
-    
   }
 }
 
