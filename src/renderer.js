@@ -92,7 +92,7 @@ class RenderProcess {
    * @param {*} maxResults
    * @returns
    */
-  async getEventsFromGoogleCalendar(maxResults = 10) {
+  async getEventsFromGoogleCalendar(maxResults = 15) {
     console.log("googleOauthToken", this.googleOauthToken);
     if (!this.googleOauthToken) {
       return;

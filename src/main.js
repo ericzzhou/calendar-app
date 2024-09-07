@@ -296,28 +296,57 @@ class MainProcess {
       events.push({
         date: "今天",
         DayOfWeek: this.getDayOfWeek(groupedEvents.today[0].start.dateTime),
-        events: groupedEvents.today,
+        events: groupedEvents.today.map((event) => ({
+          ...event,
+          start: this.formatDateTime(event.start.dateTime),
+          duration: this.formatDuration(
+            event.start.dateTime,
+            event.end.dateTime
+          ),
+        })),
       });
     }
     if (groupedEvents.tomorrow.length > 0) {
       events.push({
         date: "明天",
         DayOfWeek: this.getDayOfWeek(groupedEvents.tomorrow[0].start.dateTime),
-        events: groupedEvents.tomorrow,
+        events: groupedEvents.tomorrow.map((event) => ({
+          ...event,
+          start: this.formatDateTime(event.start.dateTime),
+          duration: this.formatDuration(
+            event.start.dateTime,
+            event.end.dateTime
+          ),
+        })),
       });
     }
     groupedEvents.upcoming.forEach((group) => {
       // 如果group.date 已经存在于 events, 则只需要追加 events
       const existingGroup = events.find((e) => e.date === group.date);
       if (existingGroup) {
-        existingGroup.events.push(...group.events);
+        // existingGroup.events.push(...group.events);
+
+        existingGroup.events.push(
+          ...group.events.map((event) => ({
+            ...event,
+            start: this.formatDateTime(event.start.dateTime),
+            duration: this.formatDuration(
+              event.start.dateTime,
+              event.end.dateTime
+            ),
+          }))
+        );
         return;
       }
 
       events.push({
         date: group.date,
         DayOfWeek: this.getDayOfWeek(group.events[0].start.dateTime),
-        events: group.events,
+        events: group.events.map((event) => ({
+          ...event,
+          start: this.formatDateTime(event.start.dateTime),
+          duration: this.formatDuration(event.start.dateTime, event.end.dateTime),
+        })),
       });
     });
 
@@ -326,7 +355,7 @@ class MainProcess {
   buildTemplate(events) {
     const group = this.groupEventsByDate(events);
     const data = this.formatRenderData(group);
-   
+
     const templatePath = path.join(__dirname, "index.hbs");
 
     const templateSource = fs.readFileSync(templatePath, "utf8");

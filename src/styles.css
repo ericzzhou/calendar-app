@@ -23,7 +23,7 @@ body {
   background-color: #45a049;
 }
 
-.event-container:hover{
+.event-container:hover {
   background-color: #ccc;
   cursor: pointer;
 }
@@ -32,7 +32,6 @@ body {
   justify-content: space-between; /* 在主轴（水平轴）上分配空白空间 */
   align-items: center; /* 在交叉轴（垂直轴）上对齐 */
   padding: 4px; /* 内边距 */
-  
 }
 
 .event-time {
@@ -44,7 +43,6 @@ body {
 .event-summary {
   padding: 1px; /* 内边距 */
   flex: 1; /* 宽度自适应 */
-  
 }
 
 /* 全局隐藏滚动条 */
@@ -63,12 +61,21 @@ body {
   display: none;
 }
 
-.event .event-container .event-summary strong,
-.event .event-container .event-summary span{
-  display: block;
-}
 
-.event .event-container .event-summary span{
+
+.summary {
+  /* color: #878383; */
+}
+.email {
   color: #878383;
   margin-top: 4px;
+}
+
+.location {
+  color: #fff;
+  margin-top: 4px;
+  background-color: #333;
+  border-radius: 10px;
+  padding: 2px 10px 2px 10px;
+  display: inline-block;
 }
