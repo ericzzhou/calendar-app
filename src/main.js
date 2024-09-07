@@ -27,6 +27,7 @@ class MainProcess {
       eventInterval: 5, // 刷新事件间隔分钟
       notificationTime: 10, //事件提醒时间，提前x分钟
     };
+    this.setIntervalId = null;
   }
 
   async createMainWindow() {
@@ -52,7 +53,23 @@ class MainProcess {
       },
     });
 
+    this.win.setMenuBarVisibility(false);
     this.win.loadFile(`${__dirname}/index.html`);
+
+    // 当窗口最小化时隐藏到托盘
+    this.win.on("minimize", (event) => {
+      event.preventDefault();
+      this.win.hide(); // 最小化时隐藏到系统托盘
+    });
+
+    this.win.webContents.send(
+      "eventInterval",
+      this.configuration.eventInterval
+    );
+    this.win.webContents.send(
+      "notificationTime",
+      this.configuration.notificationTime
+    );
   }
 
   scheduleNotification(event) {
@@ -112,13 +129,7 @@ class MainProcess {
 
   onAppEvent() {
     app.whenReady().then(() => {
-      this.createMainWindow();
-
-      // 当窗口最小化时隐藏到托盘
-      this.win.on("minimize", (event) => {
-        event.preventDefault();
-        this.win.hide(); // 最小化时隐藏到系统托盘
-      });
+      this.createMainWindow().then(() => {});
     });
 
     // 当窗口关闭时隐藏到托盘，而不是完全退出应用
@@ -170,6 +181,18 @@ class MainProcess {
         label: "显示",
         click: () => {
           this.win.show();
+        },
+      },
+      {
+        label: "刷新日历数据",
+        click: () => {
+          this.win.webContents.send("refresh");
+        },
+      },
+      {
+        label: "显示系统菜单",
+        click: () => {
+          this.win.setMenuBarVisibility(true);
         },
       },
       {
@@ -345,7 +368,10 @@ class MainProcess {
         events: group.events.map((event) => ({
           ...event,
           start: this.formatDateTime(event.start.dateTime),
-          duration: this.formatDuration(event.start.dateTime, event.end.dateTime),
+          duration: this.formatDuration(
+            event.start.dateTime,
+            event.end.dateTime
+          ),
         })),
       });
     });
@@ -396,6 +422,20 @@ class MainProcess {
       console.log(`Server listening on port: ${address.port}`);
     });
   }
+
+  setIntervalJob() {
+    if (this.setIntervalId) {
+      clearInterval(this.setIntervalId);
+      this.setIntervalId = null;
+    }
+    
+    const eventInterval = this.configuration.eventInterval;
+    console.log(`setIntervalJob 设置事件时间：${eventInterval} 分钟`);
+    this.setIntervalId = setInterval(() => {
+      console.log("refresh 定时任务执行");
+      this.win.webContents.send("refresh");
+    }, eventInterval * 60 * 1000);
+  }
   async Init() {
     const gotTheLock = app.requestSingleInstanceLock(); // 单例锁，防止多开
 
@@ -427,6 +467,7 @@ class MainProcess {
 
     this.onRenderEvent();
     this.createHttpServer();
+    this.setIntervalJob();
   }
 }
 

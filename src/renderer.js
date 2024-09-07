@@ -16,6 +16,11 @@ class RenderProcess {
      * google oauth token
      */
     this.googleOauthToken = null;
+
+    this.configuration = {
+      eventInterval: 5, // 刷新事件间隔分钟
+      notificationTime: 10, //事件提醒时间，提前x分钟
+    };
   }
 
   /**
@@ -39,7 +44,7 @@ class RenderProcess {
         this.googleOauthToken = tokens;
         this.oauth2Client.setCredentials(tokens);
 
-        this.refresh()
+        this.refresh();
       } else {
         // 用户未登录，显示授权按钮
         document.getElementById("authButton").style.display = "block";
@@ -59,6 +64,18 @@ class RenderProcess {
 
     ipcRenderer.on("html", async (event, html) => {
       document.getElementById("eventList").innerHTML = html;
+    });
+
+    ipcRenderer.on("refresh", async (event) => {
+      this.refresh();
+    });
+
+    ipcRenderer.on("eventInterval", async (event, value) => {
+      this.configuration.eventInterval = value;
+    });
+
+    ipcRenderer.on("notificationTime", async (event, value) => {
+      this.configuration.notificationTime = value;
     });
   }
 
@@ -80,10 +97,6 @@ class RenderProcess {
       });
 
       this.sendEventToMain("open-auth-url", authUrl);
-    });
-
-    document.getElementById("reload").addEventListener("click", () => {
-      this.init();
     });
   }
 
@@ -140,7 +153,3 @@ class RenderProcess {
 
 const render = new RenderProcess();
 render.init();
-
-setInterval(() => {
-  render.refresh();
-}, 5 * 60 * 1000); // 5分钟刷新一次
