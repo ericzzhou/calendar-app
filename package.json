@@ -1,13 +1,53 @@
 {
   "name": "calendar-app",
-  "productName": "calendar-alert",
-  "description": "My Electron application description",
+  "productName": "calendar-app",
+  "description": "calendar-app 日程提醒",
   "keywords": [],
   "main": "./main.js",
   "version": "1.0.0",
   "author": "ericz",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "build": {
+    "appId": "com.zhouzk.calendarapp",
+    "productName": "calendar-app",
+    "files": [
+      "dist/**/*",
+      "node_modules/**/*",
+      "build/icons/**",
+      "package.json",
+      "index.html",
+      "main.js",
+      "preload.js",
+      "renderer.js",
+      "styles.css"
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "icon": "build/icons/Martz90-Circle-Calendar.ico"
+    },
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "icon": "build/icons/Martz90-Circle-Calendar.icns"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "icon": "build/icons"
+    }
   },
   "dependencies": {
     "electron-store": "^10.0.0",
@@ -15,6 +55,7 @@
     "node-schedule": "^2.1.1"
   },
   "devDependencies": {
-    "electron": "30.0.1"
+    "electron": "30.0.1",
+    "electron-builder": "^25.0.5"
   }
 }
