@@ -49,7 +49,6 @@ class MainProcess {
         nodeIntegration: true,
         contextIsolation: false, // 确保可以正常使用 DOM 访问
       },
-      
     });
 
     this.win.loadFile(`${__dirname}/index.html`);
@@ -111,21 +110,30 @@ class MainProcess {
   }
 
   onAppEvent() {
-    app.whenReady().then(this.createMainWindow());
+    app.whenReady().then(() => {
+      this.createMainWindow();
+
+      // 当窗口最小化时隐藏到托盘
+      this.win.on("minimize", (event) => {
+        event.preventDefault();
+        this.win.hide(); // 最小化时隐藏到系统托盘
+      });
+    });
 
     // 当窗口关闭时隐藏到托盘，而不是完全退出应用
     app.on("close", (event) => {
-      event.processEvents();
+      event.processEvents(); // 阻止默认行为，防止应用关闭
       this.win.hide();
     });
 
-    // 当窗口最小化时隐藏到托盘
-    this.win.on("minimize", (event) => {
-      event.preventDefault();
-      this.win.hide();
+    app.on("before-quit", () => {
+      if (this.httpServer) {
+        this.httpServer.close();
+      }
     });
 
     app.on("window-all-closed", () => {
+      // macOS 系统（darwin 平台)
       if (process.platform !== "darwin") {
         if (this.httpServer) {
           this.httpServer.close();
@@ -141,12 +149,18 @@ class MainProcess {
     });
   }
   createTray() {
-    const iconPath = path.join(__dirname, "../","build/icons/Martz90-Circle-Calendar.512.png"); // 你自己的托盘图标路径
+    const iconPath = path.join(
+      __dirname,
+      "../",
+      "build/icons/Martz90-Circle-Calendar.512.png"
+    ); // 你自己的托盘图标路径
     this.tray = new Tray(iconPath);
 
     // 双击托盘图标时显示主窗口
     this.tray.on("double-click", () => {
-      this.win.show();
+      if (this.win) {
+        this.win.show();
+      }
     });
 
     // 创建托盘菜单
@@ -186,21 +200,6 @@ class MainProcess {
 
     ipcMain.on("open-auth-url", (event, authUrl) => {
       shell.openExternal(authUrl);
-
-      this.httpServer = http
-        .createServer((req, res) => {
-          const queryObject = url.parse(req.url, true).query;
-          if (queryObject.code) {
-            res.writeHead(200, { "Content-Type": "text/plain" });
-            res.end("Authorization successful! You can close this window.");
-
-            this.win.webContents.send("auth-code", queryObject.code);
-            this.httpServer.close();
-          }
-        })
-        .listen(httpServerPort, () => {
-          console.log("Server listening on port ", httpServerPort);
-        });
     });
   }
 
@@ -216,7 +215,46 @@ class MainProcess {
     console.log("Store set:", storeName, "=", storeValue);
   }
 
+  createHttpServer() {
+    this.httpServer = http.createServer((req, res) => {
+      const queryObject = url.parse(req.url, true).query;
+      if (queryObject.code) {
+        console.log("Google 授权成功")
+        res.writeHead(200, { "Content-Type": "text/plain" });
+        res.end(
+          "Authorization successful! You can close this window."
+        );
+
+        this.win.webContents.send("auth-code", queryObject.code);
+        // this.httpServer.close();
+      }
+    });
+
+    this.httpServer.listen(0, () => {
+      const address = this.httpServer.address();
+      this.win.webContents.send("server-port", address.port);
+      console.log(`Server listening on port: ${address.port}`);
+    });
+  }
   async Init() {
+    const gotTheLock = app.requestSingleInstanceLock(); // 单例锁，防止多开
+
+    if (!gotTheLock) {
+      app.quit(); // 如果未能获得锁，直接退出应用
+      return;
+    } else {
+      app.on("second-instance", () => {
+        // 当用户尝试启动第二个实例时，让现有窗口恢复
+        if (this.win) {
+          if (this.win.isMinimized()) {
+            this.win.restore();
+          }
+          this.win.focus();
+        }
+      });
+    }
+
+    
     // 刷新事件间隔：分钟
     await this.setStore("eventInterval", this.configuration.eventInterval);
 
@@ -229,6 +267,7 @@ class MainProcess {
     this.onAppEvent();
 
     this.onRenderEvent();
+    this.createHttpServer();
   }
 }
 

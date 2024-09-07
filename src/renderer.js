@@ -16,17 +16,23 @@ class RenderProcess {
      * google oauth token
      */
     this.googleOauthToken = null;
-    this.oauth2Client = new google.auth.OAuth2(
-      CLIENT_ID,
-      CLIENT_SECRET,
-      REDIRECT_URI
-    );
+    
   }
 
   /**
    * 监听主线程消息
    */
   onMainEvent() {
+    // 用户授权成功
+    ipcRenderer.on("server-port", async (event, port) => {
+      this.serverPort = port;
+      this.oauth2Client = new google.auth.OAuth2(
+        CLIENT_ID,
+        CLIENT_SECRET,
+        `http://localhost:${port}`
+      );
+    });
+
     //主线程获取到持久化的token
     ipcRenderer.on("tokens-retrieved", (event, tokens) => {
       console.log("从主线程获取到持久化的token:", tokens);
@@ -44,10 +50,10 @@ class RenderProcess {
     ipcRenderer.on("auth-code", async (event, code) => {
       const { tokens } = await this.oauth2Client.getToken(code);
       this.oauth2Client.setCredentials(tokens);
-
+      this.googleOauthToken = tokens;
       // 通知主线程持久化令牌
       this.sendEventToMain("save-tokens", tokens);
-      this.getAndRenderEvents();
+      await this.getAndRenderEvents();
     });
   }
 
@@ -214,6 +220,9 @@ class RenderProcess {
     if (!this.googleOauthToken) {
       return;
     }
+    
+    document.getElementById("authButton").style.display = "none";
+
     const calendar = google.calendar({
       version: "v3",
       auth: this.oauth2Client,
@@ -241,6 +250,8 @@ class RenderProcess {
     const containerHtml = this.renderGroupedEvents(groupedEvents);
     console.log("containerHtml", containerHtml);
     document.getElementById("eventList").innerHTML = containerHtml;
+
+    
   }
 
   async init() {
@@ -249,6 +260,8 @@ class RenderProcess {
     this.onMainEvent();
     this.onPageEvent();
     this.getAndRenderEvents();
+
+    
   }
 }
 
