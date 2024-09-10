@@ -1,5 +1,13 @@
 <!-- template.hbs -->
-{{#each this}}
+{{#if fontSize}}
+<style>
+    body{
+        font-size: {{fontSize}}px;
+    }
+</style>
+{{/if}}
+{{#each data}}
+
 <h3>{{date}} {{DayOfWeek}}</h3>
 <div class="event">
     {{#each events}}

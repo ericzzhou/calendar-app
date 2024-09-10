@@ -28,8 +28,10 @@ class MainProcess {
     this.configuration = {
       eventInterval: 5, // 刷新事件间隔分钟
       notificationTime: 10, //事件提醒时间，提前x分钟
+      defaultEventSize: 20, // 默认加载的事件数量
+      defaultFontSize: 12, // 默认字体
     };
-    this.setIntervalId = null;
+    this.setIntervalId = null; // 定时读取新事件的定时器
   }
 
   async createMainWindow() {
@@ -64,14 +66,7 @@ class MainProcess {
       this.win.hide(); // 最小化时隐藏到系统托盘
     });
 
-    this.win.webContents.send(
-      "eventInterval",
-      this.configuration.eventInterval
-    );
-    this.win.webContents.send(
-      "notificationTime",
-      this.configuration.notificationTime
-    );
+    this.win.webContents.send("configuration", this.configuration);
   }
 
   scheduleNotification(event) {
@@ -109,10 +104,7 @@ class MainProcess {
       // });
       // immediateNotification.show();
 
-      this.notification(
-        "会议提醒",
-        `您的会议 "${event.summary}" 即将开始！`
-      );
+      this.notification("会议提醒", `您的会议 "${event.summary}" 即将开始！`);
 
       return; // 跳过后续定时任务设置
     }
@@ -228,7 +220,13 @@ class MainProcess {
       {
         label: "测试通知",
         click: () => {
-          this.notification("通知标题","通知正文",false,true)
+          this.notification("通知标题", "通知正文", false, true);
+        },
+      },
+      {
+        label: "重置默认设置",
+        click: () => {
+          this.setDefaultConfiguration();
         },
       },
       {
@@ -422,14 +420,30 @@ class MainProcess {
   buildTemplate(events) {
     const group = this.groupEventsByDate(events);
     const data = this.formatRenderData(group);
-
     const templatePath = path.join(__dirname, "index.hbs");
 
     const templateSource = fs.readFileSync(templatePath, "utf8");
 
     const template = handlebars.compile(templateSource);
-    const html = template(data);
+
+    const datas = {
+      data: data,
+      fontSize: this.configuration.defaultFontSize,
+    };
+    // console.log("datas", datas);
+    const html = template(datas);
     this.win.webContents.send("html", html);
+  }
+
+  async getStore(key) {
+    if (!this.store) {
+      // 动态导入 electron-store
+      Store = (await import("electron-store")).default;
+      this.store = new Store(); // 初始化 store
+      console.log("Store loaded:", this.store.path); // 打印存储路径，确保加载成功
+    }
+    this.configuration = this.store.get("configuration");
+    return this.configuration;
   }
 
   async setStore(storeName, storeValue) {
@@ -503,6 +517,19 @@ class MainProcess {
   }
 
   /**
+   * 重置默认设置
+   */
+  async setDefaultConfiguration() {
+    console.log("setDefaultConfiguration");
+    this.configuration = {
+      eventInterval: 5, //刷新事件间隔：分钟
+      notificationTime: 5, //事件提醒时间设置:分钟
+      defaultEventSize: 20, // 默认加载的事件数量
+      defaultFontSize: 12, // 默认字体
+    };
+    await this.setStore("configuration", this.configuration);
+  }
+  /**
    * 发送通知
    * @param {*} title 消息标题
    * @param {*} message 消息正文
@@ -540,14 +567,13 @@ class MainProcess {
       });
     }
 
-    // 刷新事件间隔：分钟
-    await this.setStore("eventInterval", this.configuration.eventInterval);
+    console.log("Init");
+    this.configuration = await this.getStore("configuration");
+    console.log("configuration", this.configuration);
+    if (this.configuration == null) {
+      await this.setDefaultConfiguration();
+    }
 
-    // 事件提醒时间设置:分钟
-    await this.setStore(
-      "notificationTime",
-      this.configuration.notificationTime
-    );
     this.createTray();
     this.onAppEvent();
 

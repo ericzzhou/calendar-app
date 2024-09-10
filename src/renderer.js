@@ -20,6 +20,8 @@ class RenderProcess {
     this.configuration = {
       eventInterval: 5, // 刷新事件间隔分钟
       notificationTime: 10, //事件提醒时间，提前x分钟
+      defaultEventSize: 20, // 默认加载的事件数量
+      defaultFontSize: 12, // 默认字体
     };
   }
 
@@ -70,12 +72,8 @@ class RenderProcess {
       this.refresh();
     });
 
-    ipcRenderer.on("eventInterval", async (event, value) => {
-      this.configuration.eventInterval = value;
-    });
-
-    ipcRenderer.on("notificationTime", async (event, value) => {
-      this.configuration.notificationTime = value;
+    ipcRenderer.on("configuration", async (event, value) => {
+      this.configuration = value;
     });
   }
 
@@ -107,11 +105,10 @@ class RenderProcess {
       // 使用 closest 确保捕获到正确的目标元素，防止点击到子元素导致问题
       const targetElement = e.target.closest(".event-container");
       if (targetElement) {
-        document.querySelectorAll(".event-container").forEach(el => {
-          el.classList.remove("highlighted")
+        document.querySelectorAll(".event-container").forEach((el) => {
+          el.classList.remove("highlighted");
         });
         targetElement.classList.add("highlighted");
-
 
         console.log(`触发事件的元素${e.target}`, e);
         e.preventDefault();
@@ -132,6 +129,7 @@ class RenderProcess {
       return;
     }
 
+    maxResults = this.configuration.defaultEventSize;
     document.getElementById("authButton").style.display = "none";
 
     const calendar = google.calendar({
