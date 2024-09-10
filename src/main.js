@@ -440,15 +440,6 @@ class MainProcess {
 
   // 创建右键菜单并复制会议链接
   createContextMenu(eventLink) {
-    // const menu = new Menu();
-    // menu.append(new MenuItem({
-    //   label: '打开会议链接',
-    //   click: () => {
-    //     shell.openExternal(eventLink);
-    //   }
-    // }));
-    // menu.popup({ window: this.win });
-
     const menu = Menu.buildFromTemplate([
       {
         label: "复制会议链接",
@@ -456,6 +447,14 @@ class MainProcess {
           clipboard.writeText(eventLink); // 复制链接到剪贴板
 
           console.log(`会议链接已复制: ${eventLink}`);
+        },
+      },
+      {
+        label: "打开会议",
+        click: () => {
+          shell.openExternal(eventLink);
+
+          console.log(`会议已打开: ${eventLink}`);
         },
       },
     ]);
