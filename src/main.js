@@ -48,7 +48,7 @@ class MainProcess {
       y: yPos,
       alwaysOnTop: true, // 使窗口始终在其他窗口之上
       webPreferences: {
-        preload: `${__dirname}/preload.js`,// 确保能与渲染进程通讯
+        preload: `${__dirname}/preload.js`, // 确保能与渲染进程通讯
         nodeIntegration: true,
         contextIsolation: false, // 确保可以正常使用 DOM 访问
       },
@@ -74,7 +74,7 @@ class MainProcess {
   }
 
   scheduleNotification(event) {
-    // console.log(event)
+    // 解析会议的开始时间
     const eventStartTime = new Date(event.start.dateTime); // 假设 event.start.dateTime 是 ISO 时间格式
     const notificationTime = new Date(
       eventStartTime.getTime() - this.configuration.notificationTime * 60000
@@ -87,8 +87,17 @@ class MainProcess {
       console.log(`提醒已取消： ${event.summary} at ${notificationTime}`);
     }
 
-    // 如果当前时间已超过提醒时间，立即提醒
+    // 获取当前时间
     const currentTime = new Date();
+
+    if (eventStartTime < currentTime) {
+      console.log(
+        `会议已经开始或已结束： ${event.summary} at ${eventStartTime}`
+      );
+      return; // 跳过后续提醒设置
+    }
+
+    //如果当前时间已超过提醒时间，立即提醒
     if (notificationTime < currentTime) {
       console.log(`任务过期，立即提醒： ${event.summary} at ${currentTime}`);
 
