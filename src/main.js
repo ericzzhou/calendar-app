@@ -120,6 +120,15 @@ class MainProcess {
       console.log("没有事件需要设置提醒");
       return;
     }
+
+    // 先清理所有job
+    if (this.notificationJobs && this.notificationJobs.length > 0) {
+      // 取消job
+      this.notificationJobs.forEach((job) => {
+        job.cancel();
+      });
+    }
+
     events.forEach((event) => {
       if (event.start && event.start.dateTime) {
         this.scheduleNotification(event); // 为每个事件设置提醒
@@ -428,7 +437,7 @@ class MainProcess {
       clearInterval(this.setIntervalId);
       this.setIntervalId = null;
     }
-    
+
     const eventInterval = this.configuration.eventInterval;
     console.log(`setIntervalJob 设置事件时间：${eventInterval} 分钟`);
     this.setIntervalId = setInterval(() => {
