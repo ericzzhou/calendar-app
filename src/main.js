@@ -16,6 +16,10 @@ const path = require("path");
 const handlebars = require("handlebars");
 const fs = require("fs");
 const notifier = require("node-notifier");
+const log = require('electron-log');
+
+// 配置日志文件路径
+log.transports.file.file = path.join(app.getPath('userData'), 'main.log');
 let Store;
 
 class MainProcess {
@@ -151,7 +155,11 @@ class MainProcess {
 
   onAppEvent() {
     app.whenReady().then(() => {
-      this.createMainWindow().then(() => {});
+      log.info("app ready ......")
+      this.createMainWindow().then(() => {
+        log.info("create window success ......")
+      });
+      this.watchStoreChanged();
     });
 
     // 当窗口关闭时隐藏到托盘，而不是完全退出应用
@@ -446,7 +454,9 @@ class MainProcess {
       console.log("Store loaded:", this.store.path); // 打印存储路径，确保加载成功
     }
 
+    log.info("watch store changed begin")
     fs.watchFile(this.store.path, async (curr, prev) => {
+      log.info("store changed")
       if (curr.mtime !== prev.mtime) {
         // 配置文件发生变化，提醒用户重启应用
         this.notification(
@@ -456,10 +466,13 @@ class MainProcess {
       }
 
       const newConf = await this.getStore("configuration");
+      log.info("newConf", newConf)
       if (newConf == null) {
         await this.setDefaultConfiguration();
       }
+
       this.win.webContents.send("configuration", newConf);
+      log.info("win.webContents.send configuration", newConf)
     });
   }
   async getStore(key) {
@@ -577,6 +590,7 @@ class MainProcess {
     });
   }
   async Init() {
+    log.info("Init ......")
     const gotTheLock = app.requestSingleInstanceLock(); // 单例锁，防止多开
 
     if (!gotTheLock) {
@@ -606,7 +620,7 @@ class MainProcess {
     this.onRenderEvent();
     this.createHttpServer();
     this.setIntervalJob();
-    this.watchStoreChanged();
+    
   }
 }
 

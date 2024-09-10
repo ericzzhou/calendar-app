@@ -31,7 +31,7 @@
     "nsis": {
       "oneClick": true,
       "perMachine": true,
-      "allowToChangeInstallationDirectory": true,
+      "allowToChangeInstallationDirectory": false,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
       "shortcutName": "calendar-app"
@@ -52,6 +52,7 @@
     }
   },
   "dependencies": {
+    "electron-log": "^5.2.0",
     "electron-store": "^10.0.0",
     "googleapis": "^144.0.0",
     "handlebars": "^4.7.8",
