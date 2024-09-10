@@ -73,7 +73,9 @@ class RenderProcess {
     });
 
     ipcRenderer.on("configuration", async (event, value) => {
+      console.log("configuration", value);
       this.configuration = value;
+      this.refresh();
     });
   }
 

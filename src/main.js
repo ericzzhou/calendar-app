@@ -435,6 +435,33 @@ class MainProcess {
     this.win.webContents.send("html", html);
   }
 
+  /**
+   * 检测store配置文件修改
+   */
+  async watchStoreChanged() {
+    if (!this.store) {
+      // 动态导入 electron-store
+      Store = (await import("electron-store")).default;
+      this.store = new Store(); // 初始化 store
+      console.log("Store loaded:", this.store.path); // 打印存储路径，确保加载成功
+    }
+
+    fs.watchFile(this.store.path, async (curr, prev) => {
+      if (curr.mtime !== prev.mtime) {
+        // 配置文件发生变化，提醒用户重启应用
+        this.notification(
+          "配置文件修改",
+          "配置文件已修改，请重启应用以应用新配置。"
+        );
+      }
+
+      const newConf = await this.getStore("configuration");
+      if (newConf == null) {
+        await this.setDefaultConfiguration();
+      }
+      this.win.webContents.send("configuration", newConf);
+    });
+  }
   async getStore(key) {
     if (!this.store) {
       // 动态导入 electron-store
@@ -567,9 +594,8 @@ class MainProcess {
       });
     }
 
-    console.log("Init");
     this.configuration = await this.getStore("configuration");
-    console.log("configuration", this.configuration);
+
     if (this.configuration == null) {
       await this.setDefaultConfiguration();
     }
@@ -580,6 +606,7 @@ class MainProcess {
     this.onRenderEvent();
     this.createHttpServer();
     this.setIntervalJob();
+    this.watchStoreChanged();
   }
 }
 
