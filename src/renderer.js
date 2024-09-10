@@ -77,6 +77,20 @@ class RenderProcess {
       this.configuration = value;
       this.refresh();
     });
+
+    ipcRenderer.on("storePath", async (event, value) => {
+      // document.getElementById("footer").innerHTML = `
+      // <a target="_blank" href="${value}">配置文件</a>
+      // `;
+
+      const linkElement = document.getElementById("config-link");
+      // linkElement.textContent = value
+      // linkElement.href = "#"
+      linkElement.addEventListener("click", (e) => {
+        e.preventDefault();
+        this.sendEventToMain("open-file", value);
+      });
+    });
   }
 
   // 向主线程发通知
