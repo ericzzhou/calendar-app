@@ -6,6 +6,7 @@ const {
   Tray,
   Menu,
   screen,
+  clipboard,
 } = require("electron");
 const http = require("http");
 const url = require("url");
@@ -47,7 +48,7 @@ class MainProcess {
       y: yPos,
       alwaysOnTop: true, // 使窗口始终在其他窗口之上
       webPreferences: {
-        preload: `${__dirname}/preload.js`,
+        preload: `${__dirname}/preload.js`,// 确保能与渲染进程通讯
         nodeIntegration: true,
         contextIsolation: false, // 确保可以正常使用 DOM 访问
       },
@@ -234,6 +235,11 @@ class MainProcess {
 
     ipcMain.on("open-auth-url", (event, authUrl) => {
       shell.openExternal(authUrl);
+    });
+
+    ipcMain.on("show-context-menu", (event, link) => {
+      console.log(`收到右键菜单请求：${link}`);
+      this.createContextMenu(link);
     });
   }
 
@@ -430,6 +436,31 @@ class MainProcess {
       this.win.webContents.send("server-port", address.port);
       console.log(`Server listening on port: ${address.port}`);
     });
+  }
+
+  // 创建右键菜单并复制会议链接
+  createContextMenu(eventLink) {
+    // const menu = new Menu();
+    // menu.append(new MenuItem({
+    //   label: '打开会议链接',
+    //   click: () => {
+    //     shell.openExternal(eventLink);
+    //   }
+    // }));
+    // menu.popup({ window: this.win });
+
+    const menu = Menu.buildFromTemplate([
+      {
+        label: "复制会议链接",
+        click: () => {
+          clipboard.writeText(eventLink); // 复制链接到剪贴板
+
+          console.log(`会议链接已复制: ${eventLink}`);
+        },
+      },
+    ]);
+
+    menu.popup(); // 显示菜单
   }
 
   setIntervalJob() {

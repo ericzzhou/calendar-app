@@ -90,13 +90,34 @@ class RenderProcess {
   listeningPageEvent() {
     // 点击google授权按钮进行授权
     const authButton = document.getElementById("authButton");
-    authButton.addEventListener("click", () => {
+
+    const authEvent = () => {
       const authUrl = this.oauth2Client.generateAuthUrl({
         access_type: "offline",
         scope: SCOPES,
       });
 
       this.sendEventToMain("open-auth-url", authUrl);
+    };
+    authButton.removeEventListener("click", authEvent);
+    authButton.addEventListener("click", authEvent);
+
+    const eventsContainer = document.getElementById("eventList");
+    eventsContainer.addEventListener("contextmenu", (e) => {
+      // 使用 closest 确保捕获到正确的目标元素，防止点击到子元素导致问题
+      const targetElement = e.target.closest(".event-container");
+      if (targetElement) {
+        document.querySelectorAll(".event-container").forEach(el => {
+          el.classList.remove("highlighted")
+        });
+        targetElement.classList.add("highlighted");
+
+
+        console.log(`触发事件的元素${e.target}`, e);
+        e.preventDefault();
+        const link = targetElement.dataset.link;
+        this.sendEventToMain("show-context-menu", link);
+      }
     });
   }
 

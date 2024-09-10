@@ -3,7 +3,7 @@
 <h3>{{date}} {{DayOfWeek}}</h3>
 <div class="event">
     {{#each events}}
-    <div class="event-container">
+    <div class="event-container" data-link="{{hangoutLink}}">
         <div class="event-time">{{start}} <br> {{duration}}</div>
         <div class="event-summary">
             <div class="summary"><strong>{{summary}}</strong></div>
