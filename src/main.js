@@ -15,6 +15,7 @@ const { Notification } = require("electron");
 const path = require("path");
 const handlebars = require("handlebars");
 const fs = require("fs");
+const notifier = require("node-notifier");
 let Store;
 
 class MainProcess {
@@ -102,21 +103,31 @@ class MainProcess {
       console.log(`任务过期，立即提醒： ${event.summary} at ${currentTime}`);
 
       // 显示立即提醒
-      const immediateNotification = new Notification({
-        title: "会议提醒",
-        body: `您的会议 "${event.summary}" 即将开始！`,
-      });
-      immediateNotification.show();
+      // const immediateNotification = new Notification({
+      //   title: "会议提醒",
+      //   body: `您的会议 "${event.summary}" 即将开始！`,
+      // });
+      // immediateNotification.show();
+
+      this.notification(
+        "会议提醒",
+        `您的会议 "${event.summary}" 即将开始！`
+      );
+
       return; // 跳过后续定时任务设置
     }
 
     // 正常设置新的提醒任务
     const job = schedule.scheduleJob(notificationTime, () => {
-      const notification = new Notification({
-        title: "会议提醒",
-        body: `您的会议 "${event.summary}" 将在${this.configuration.notificationTime}分钟后开始。`,
-      });
-      notification.show();
+      this.notification(
+        "会议提醒",
+        `您的会议 "${event.summary}" 将在${this.configuration.notificationTime}分钟后开始。`
+      );
+      // const notification = new Notification({
+      //   title: "会议提醒",
+      //   body: `您的会议 "${event.summary}" 将在${this.configuration.notificationTime}分钟后开始。`,
+      // });
+      // notification.show();
     });
 
     // 将新任务存储到 Map 中，使用事件的唯一 ID 作为 key
@@ -212,6 +223,12 @@ class MainProcess {
         label: "显示系统菜单",
         click: () => {
           this.win.setMenuBarVisibility(true);
+        },
+      },
+      {
+        label: "测试通知",
+        click: () => {
+          this.notification("通知标题","通知正文",false,true)
         },
       },
       {
@@ -483,6 +500,27 @@ class MainProcess {
       console.log("refresh 定时任务执行");
       this.win.webContents.send("refresh");
     }, eventInterval * 60 * 1000);
+  }
+
+  /**
+   * 发送通知
+   * @param {*} title 消息标题
+   * @param {*} message 消息正文
+   * @param {*} sound 是否播放声音
+   * @param {*} wait 是否等待用户反馈
+   */
+  notification(title, message, sound = false, wait = false) {
+    notifier.notify({
+      title: title,
+      message: message,
+      icon: path.join(
+        __dirname,
+        "../",
+        "build/icons/Martz90-Circle-Calendar.512.png"
+      ),
+      sound: sound, // 是否播放声音
+      wait: wait, // 是否等待用户反馈
+    });
   }
   async Init() {
     const gotTheLock = app.requestSingleInstanceLock(); // 单例锁，防止多开
