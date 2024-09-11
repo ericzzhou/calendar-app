@@ -38,7 +38,7 @@ class StoreManager {
    * @returns
    */
   async getConfiguration() {
-    const configuration = await this.getStoreByKey("configuration");
+    let configuration = await this.getStoreByKey("configuration");
     if (configuration == null) {
       configuration = _defaultConfiguration;
       await this.setDefaultConfiguration();

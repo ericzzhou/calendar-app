@@ -1,10 +1,10 @@
 {
   "name": "calendar-app",
-  "productName": "日程提醒",
+  "productName": "calendar-app",
   "description": "calendar-app 日程提醒",
   "keywords": [],
   "main": "./src/main.js",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "author": "ericz",
   "scripts": {
     "start": "electron .",
@@ -12,7 +12,7 @@
   },
   "build": {
     "appId": "com.zhouzk.calendarapp",
-    "productName": "日程提醒",
+    "productName": "calendar-app",
     "files": [
       "src/**/*",
       "node_modules/**/*",
