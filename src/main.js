@@ -54,6 +54,7 @@ class MainProcess {
     win.webContents.send("storePath", await storeManager.getStorePath());
 
     win.webContents.send("refresh");
+    win.webContents.send("version",app.getVersion())
 
     logManager.info("init mainWin event : minimize ......");
     // 当窗口最小化时隐藏到托盘

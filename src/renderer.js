@@ -91,6 +91,10 @@ class RenderProcess {
         this.sendEventToMain("open-file", value);
       });
     });
+
+    ipcRenderer.on("version", async (event,version) => {
+      document.getElementById("version").innerHTML = version
+    });
   }
 
   // 向主线程发通知
@@ -132,6 +136,8 @@ class RenderProcess {
         this.sendEventToMain("show-context-menu", link);
       }
     });
+
+    
   }
 
   /**
@@ -169,6 +175,7 @@ class RenderProcess {
     this.listeningMainEvent();
     this.listeningPageEvent();
     this.refresh();
+    
   }
   async refresh() {
     // 向主线程请求获取持久化的令牌

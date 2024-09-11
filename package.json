@@ -1,6 +1,6 @@
 {
   "name": "calendar-app",
-  "productName": "calendar-app",
+  "productName": "日程提醒",
   "description": "calendar-app 日程提醒",
   "keywords": [],
   "main": "./src/main.js",
@@ -12,7 +12,7 @@
   },
   "build": {
     "appId": "com.zhouzk.calendarapp",
-    "productName": "calendar-app",
+    "productName": "日程提醒",
     "files": [
       "src/**/*",
       "node_modules/**/*",
@@ -26,7 +26,8 @@
         "provider": "github",
         "owner": "ericzzhou",
         "repo": "calendar-app",
-        "private": true
+        "private": true,
+        "token":"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"
       }
     ],
     "win": {
