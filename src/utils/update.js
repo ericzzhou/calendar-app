@@ -1,56 +1,67 @@
 const path = require("path");
-const { app, autoUpdater, dialog } = require("electron");
-const log = require("electron-log");
+const { app, dialog } = require("electron");
+const { autoUpdater } = require("electron-updater");
+const logManager = require("./logManager");
+const notification = require("./notification");
 
-// 配置日志文件路径
-log.transports.file.file = path.join(app.getPath("userData"), "main.log");
 const checkUpdate = (serverUrl) => {
   const feed = `${serverUrl}/update?platform=${
     process.platform
   }&version=${app.getVersion()}`;
 
-  try {
-    autoUpdater.setFeedURL(feed);
+  // logManager.info(`设置自动更新地址：${feed}`);
 
-    setInterval(() => {
-      autoUpdater.checkForUpdates();
-    }, 60000 * 5); // 5分钟检查一次
+  try {
+    // autoUpdater.setFeedURL(feed);
+
+    setInterval(async () => {
+      logManager.info("检查更新");
+      // autoUpdater.checkForUpdates();
+      const isDev = await import("electron-is-dev");
+      if (isDev) {
+        // 开发环境下强制启用更新检查
+        autoUpdater.autoDownload = false; // 可以关闭自动下载以手动控制
+        autoUpdater.checkForUpdates();
+      } else {
+        autoUpdater.checkForUpdatesAndNotify();
+      }
+    }, 1000 * 60 * 1); // 1分钟检查一次
   } catch (error) {
-    this.notification("错误", "自动更新失败，请检查日志");
-    log.error("autoUpdate");
-    log.error(error);
+    notification("错误", "自动更新失败，请检查日志");
+    logManager.error("autoUpdate");
+    logManager.error(error);
   }
 
   autoUpdater.on("checking-for-update", () => {
-    this.notification("更新", "正在检查程序更新");
-    log.info("正在检查程序更新");
+    // notification("更新", "正在检查程序更新");
+    logManager.info("正在检查程序更新");
   });
 
   autoUpdater.on("update-available", () => {
-    this.notification("更新", "发现新版本，正在下载");
-    log.info("发现新版本，正在下载");
+    notification("更新", "发现新版本，正在下载");
+    logManager.info("发现新版本，正在下载");
   });
 
   autoUpdater.on("update-not-available", () => {
-    log.info("没有发现新版本 :(");
-    this.notification("更新", "没有发现新版本 :(");
+    logManager.info("没有发现新版本 :(");
+    notification("更新", "没有发现新版本 :(");
   });
 
   autoUpdater.on("error", (error) => {
-    this.notification("更新", "自动更新失败，请检查日志");
-    log.error("autoUpdate");
-    log.error(error);
+    notification("更新", "自动更新失败，请检查日志");
+    logManager.error("autoUpdate");
+    logManager.error(error);
   });
 
   autoUpdater.on("update-downloaded", (event, notes, name, date) => {
-    log.info("下载完成，正在安装");
-    this.notification("更新", "下载完成，正在安装");
+    logManager.info("下载完成，正在安装");
+    notification("更新", "下载完成，正在安装");
 
-    log.info(`新版本名为${name}，发布于${date}`);
-    this.notification("更新", `新版本名为${name}，发布于${date}`);
+    logManager.info(`新版本名为${name}，发布于${date}`);
+    notification("更新", `新版本名为${name}，发布于${date}`);
 
-    log.info(`发行说明为：${notes}`);
-    this.notification("更新", `发行说明为：${notes}`);
+    logManager.info(`发行说明为：${notes}`);
+    notification("更新", `发行说明为：${notes}`);
 
     const dialogOpts = {
       type: "info",

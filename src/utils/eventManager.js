@@ -5,6 +5,7 @@ const path = require("path");
 const { groupEventsByDate, formatRenderData } = require("./utils");
 const handlebars = require("handlebars");
 const fs = require("fs");
+const logManager = require("./logManager");
 
 class EventManager {
   constructor() {
@@ -32,14 +33,14 @@ class EventManager {
     if (this.notificationJobs.has(event.id)) {
       const existingJob = this.notificationJobs.get(event.id);
       existingJob.cancel(); // 取消之前的定时任务
-      console.log(`提醒已取消： ${event.summary} at ${notificationTime}`);
+      logManager.info(`提醒已取消： ${event.summary} at ${notificationTime}`);
     }
 
     // 获取当前时间
     const currentTime = new Date();
 
     if (eventStartTime < currentTime) {
-      console.log(
+      logManager.info(
         `会议已经开始或已结束： ${event.summary} at ${eventStartTime}`
       );
       return; // 跳过后续提醒设置
@@ -47,7 +48,9 @@ class EventManager {
 
     //如果当前时间已超过提醒时间，立即提醒
     if (notificationTime < currentTime) {
-      console.log(`任务过期，立即提醒： ${event.summary} at ${currentTime}`);
+      logManager.info(
+        `任务过期，立即提醒： ${event.summary} at ${currentTime}`
+      );
 
       // 显示立即提醒
       // const immediateNotification = new Notification({
@@ -77,7 +80,7 @@ class EventManager {
     // 将新任务存储到 Map 中，使用事件的唯一 ID 作为 key
     this.notificationJobs.set(event.id, job);
 
-    console.log(`提醒已设置: ${event.summary} at ${notificationTime}`);
+    logManager.info(`提醒已设置: ${event.summary} at ${notificationTime}`);
   }
 
   /**
@@ -87,7 +90,7 @@ class EventManager {
    */
   processEvents(events) {
     if (!events) {
-      console.log("没有事件需要设置提醒");
+      logManager.info("没有事件需要设置提醒");
       return;
     }
 
@@ -106,10 +109,10 @@ class EventManager {
     });
   }
 
-  buildTemplate(events,configuration) {
+  buildTemplate(events, configuration) {
     const group = groupEventsByDate(events);
     const data = formatRenderData(group);
-    const templatePath = path.join(__dirname,"../", "index.hbs");
+    const templatePath = path.join(__dirname, "../", "index.hbs");
 
     const templateSource = fs.readFileSync(templatePath, "utf8");
 
@@ -131,7 +134,7 @@ class EventManager {
     }
 
     const eventInterval = this.configuration.eventInterval;
-    console.log(`setIntervalJob 设置事件时间：${eventInterval} 分钟`);
+    logManager.info(`setIntervalJob 设置事件更新时间间隔：${eventInterval} 分钟`);
     this.setIntervalId = setInterval(() => {
       if (callback) callback();
       // console.log("refresh 定时任务执行");

@@ -11,6 +11,7 @@ const logManager = require("./utils/logManager");
 const createContextMenu = require("./utils/contextMenu");
 const eventManager = require("./utils/eventManager");
 const winManager = require("./utils/winManager");
+const checkUpdate = require("./utils/update");
 
 class MainProcess {
   constructor() {
@@ -26,6 +27,7 @@ class MainProcess {
       notificationTime: 10, //事件提醒时间，提前x分钟
       defaultEventSize: 20, // 默认加载的事件数量
       defaultFontSize: 12, // 默认字体
+      serverUrl: null,
     };
     this.oauthTokens = null;
   }
@@ -81,6 +83,7 @@ class MainProcess {
     logManager.info("init page event ......");
     this.onRenderEvent();
 
+    checkUpdate(this.configuration.serverUrl);
     //#region  APP 事件监听
     // 当窗口关闭时隐藏到托盘，而不是完全退出应用
     app.on("close", (event) => {
@@ -128,7 +131,7 @@ class MainProcess {
     ipcMain.on("calendar-events", (event, events) => {
       eventManager.processEvents(events); // 处理事件并安排提醒
       // this.buildTemplate(events);
-      const html = eventManager.buildTemplate(events,this.configuration);
+      const html = eventManager.buildTemplate(events, this.configuration);
       this.windows.main.webContents.send("html", html); //TODO 改成 replay
     });
 
@@ -175,7 +178,7 @@ class MainProcess {
     }
 
     const eventInterval = this.configuration.eventInterval;
-    console.log(`setIntervalJob 设置事件时间：${eventInterval} 分钟`);
+    logManager.info(`setIntervalJob 设置事件更新间隔：${eventInterval} 分钟`);
     this.setIntervalId = setInterval(() => {
       console.log("refresh 定时任务执行");
       this.windows.main.webContents.send("refresh");

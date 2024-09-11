@@ -8,7 +8,7 @@
   "author": "ericz",
   "scripts": {
     "start": "electron .",
-    "build": "electron-builder"
+    "build": "electron-builder --win --publish=always"
   },
   "build": {
     "appId": "com.zhouzk.calendarapp",
@@ -21,6 +21,14 @@
     "directories": {
       "output": "release"
     },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "ericzzhou",
+        "repo": "calendar-app",
+        "private": true
+      }
+    ],
     "win": {
       "target": [
         "nsis",
@@ -52,8 +60,10 @@
     }
   },
   "dependencies": {
+    "electron-is-dev": "^3.0.1",
     "electron-log": "^5.2.0",
     "electron-store": "^10.0.0",
+    "electron-updater": "^6.3.4",
     "googleapis": "^144.0.0",
     "handlebars": "^4.7.8",
     "node-notifier": "^10.0.1",

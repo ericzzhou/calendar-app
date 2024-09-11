@@ -9,6 +9,7 @@ _defaultConfiguration = {
   notificationTime: 10, //事件提醒时间，提前x分钟
   defaultEventSize: 20, // 默认加载的事件数量
   defaultFontSize: 12, // 默认字体
+  serverUrl:"http://10.30.110.206:5432"
 };
 
 class StoreManager {
