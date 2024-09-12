@@ -7,11 +7,12 @@ const notifier = require("node-notifier");
 
 const createTray = require("./utils/createTray");
 const storeManager = require("./utils/storeManager");
-const logManager = require("./utils/logManager");
+// const logManager = require("./utils/logManager");
 const createContextMenu = require("./utils/contextMenu");
 const eventManager = require("./utils/eventManager");
 const winManager = require("./utils/winManager");
 const checkUpdate = require("./utils/update");
+const { convertBytesPerSecond } = require("./utils/utils");
 
 class MainProcess {
   constructor() {
@@ -37,26 +38,26 @@ class MainProcess {
       `${__dirname}/preload.js`,
       `${__dirname}/index.html`
     );
-    logManager.info("init main window complate ......");
+    // logManager.info("init main window complate ......");
 
-    logManager.info("init configuration ......");
-    logManager.info(this.configuration);
+    // logManager.info("init configuration ......");
+    // logManager.info(this.configuration);
     win.webContents.send("configuration", this.configuration);
 
-    logManager.info("init oauthTokens ......");
-    logManager.info(this.oauthTokens);
+    // logManager.info("init oauthTokens ......");
+    // logManager.info(this.oauthTokens);
     win.webContents.send("oauthTokens", this.oauthTokens);
 
-    logManager.info("init store path ......");
+    // logManager.info("init store path ......");
     const storePath = await storeManager.getStorePath();
 
-    logManager.info(`storePath : ${storePath}`);
+    // logManager.info(`storePath : ${storePath}`);
     win.webContents.send("storePath", await storeManager.getStorePath());
 
     win.webContents.send("refresh");
     win.webContents.send("version", app.getVersion());
 
-    logManager.info("init mainWin event : minimize ......");
+    // logManager.info("init mainWin event : minimize ......");
     // 当窗口最小化时隐藏到托盘
     win.on("minimize", (event) => {
       event.preventDefault();
@@ -70,18 +71,18 @@ class MainProcess {
   async onAppEvent() {
     await app.whenReady();
 
-    logManager.info("app ready ......");
+    // logManager.info("app ready ......");
 
-    logManager.info("init main window ......");
+    // logManager.info("init main window ......");
     const mainWin = await this.InitMainWindow();
 
-    logManager.info("init tray ......");
+    // logManager.info("init tray ......");
     this.tray = createTray(mainWin);
 
-    logManager.info("init http server ......");
+    // logManager.info("init http server ......");
     this.createHttpServer();
 
-    logManager.info("init page event ......");
+    // logManager.info("init page event ......");
     this.onRenderEvent();
 
     checkUpdate(this.configuration.serverUrl, (progressObj) => {
@@ -95,10 +96,12 @@ class MainProcess {
         progressObj.total +
         ")";
 
-      this.windows.main.webContents.send(
-        "download-progress",
-        progressObj
-      );
+      const speedFormat = convertBytesPerSecond(progressObj.bytesPerSecond);
+
+      const dowloadTips = `新版本：已下载 ${Number(progressObj.percent).toFixed(
+        2
+      )}%，Speed：${speedFormat}`;
+      this.windows.main.webContents.send("download-progress", dowloadTips);
     });
     //#region  APP 事件监听
     // 当窗口关闭时隐藏到托盘，而不是完全退出应用
@@ -135,7 +138,7 @@ class MainProcess {
   onRenderEvent() {
     ipcMain.on("save-tokens", async (event, tokens) => {
       await storeManager.setStore("oauthTokens", tokens);
-      logManager.info("Tokens saved successfully");
+      // logManager.info("Tokens saved successfully");
     });
 
     ipcMain.on("get-tokens", async (event) => {
@@ -194,7 +197,7 @@ class MainProcess {
     }
 
     const eventInterval = this.configuration.eventInterval;
-    logManager.info(`setIntervalJob 设置事件更新间隔：${eventInterval} 分钟`);
+    // logManager.info(`setIntervalJob 设置事件更新间隔：${eventInterval} 分钟`);
     this.setIntervalId = setInterval(() => {
       console.log("refresh 定时任务执行");
       this.windows.main.webContents.send("refresh");
@@ -202,9 +205,9 @@ class MainProcess {
   }
 
   async Init() {
-    logManager.info("Init App......");
+    // logManager.info("Init App......");
 
-    logManager.info("Init 单例锁检查 ......");
+    // logManager.info("Init 单例锁检查 ......");
     //#region  单例锁，防止多开
     const gotTheLock = app.requestSingleInstanceLock(); // 单例锁，防止多开
 
@@ -224,24 +227,24 @@ class MainProcess {
     }
     //#endregion
 
-    logManager.info("Init 获取配置文件 ......");
+    // logManager.info("Init 获取配置文件 ......");
     this.configuration = await storeManager.getConfiguration();
     this.oauthTokens = await storeManager.getStoreByKey("oauthTokens");
 
     await this.onAppEvent();
 
     // this.setIntervalJob();
-    logManager.info("正在设置定时刷新任务");
+    // logManager.info("正在设置定时刷新任务");
     eventManager.setIntervalJob(() => {
       console.log("refresh 定时任务执行");
       this.windows.main.webContents.send("refresh");
     });
 
-    logManager.info("init 启动配置文件监控，当发生变化时向主窗口传递数据");
+    // logManager.info("init 启动配置文件监控，当发生变化时向主窗口传递数据");
     // 启动配置文件监控，当发生变化时向主窗口传递数据
     await storeManager.watchStoreChanged((newConf) => {
-      logManager.info("configuration changed ......");
-      logManager.info(newConf);
+      // logManager.info("configuration changed ......");
+      // logManager.info(newConf);
       this.configuration = newConf;
       if (this.windows.main) {
         this.windows.main.webContents.send("configuration", newConf);

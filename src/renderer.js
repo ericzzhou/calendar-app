@@ -96,17 +96,14 @@ class RenderProcess {
       document.getElementById("version").innerHTML = version;
     });
 
-    ipcRenderer.on("download-progress", (event, progressObj) => {
+    ipcRenderer.on("download-progress", (event, dowloadTips) => {
       const dom = document.getElementById("download-progress");
       if (!dom) {
         return;
       }
-      const downloadMesage = `新版本：已下载 ${Math.floor(
-        progressObj.percent
-      )}%`;
-
+      
       dom.style.display = "block";
-      dom.innerHTML = downloadMesage;
+      dom.innerHTML = dowloadTips;
     });
   }
 

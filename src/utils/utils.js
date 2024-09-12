@@ -173,6 +173,24 @@ const buildTemplate = (templatePath, events, fontSize) => {
   return html;
 };
 
+/**
+ * 将下载速度 bytesPerSecond 转换为 kb/s（千字节每秒）或 MB/s（兆字节每秒）
+ * @param {*} bytesPerSecond
+ * @returns
+ */
+const convertBytesPerSecond = (bytesPerSecond) => {
+  let kbPerSecond = bytesPerSecond / 1024; // 转换为 KB/s
+  let mbPerSecond = bytesPerSecond / (1024 * 1024); // 转换为 MB/s
+
+  if (mbPerSecond >= 1) {
+    // 如果大于等于 1 MB/s，使用 MB/s 显示
+    return mbPerSecond.toFixed(2) + " MB/s";
+  } else {
+    // 否则，使用 KB/s 显示
+    return kbPerSecond.toFixed(2) + " KB/s";
+  }
+};
+
 module.exports = {
   groupEventsByDate,
   formatDuration,
@@ -180,4 +198,5 @@ module.exports = {
   getDayOfWeek,
   formatRenderData,
   buildTemplate,
+  convertBytesPerSecond,
 };

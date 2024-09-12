@@ -1,6 +1,6 @@
 const fs = require("fs");
 const notification = require("./notification");
-const logManager = require("./logManager");
+// const logManager = require("./logManager");
 
 let Store;
 
@@ -8,8 +8,7 @@ _defaultConfiguration = {
   eventInterval: 5, // 刷新事件间隔分钟
   notificationTime: 10, //事件提醒时间，提前x分钟
   defaultEventSize: 20, // 默认加载的事件数量
-  defaultFontSize: 12, // 默认字体
-  serverUrl:"http://10.30.110.206:5432"
+  defaultFontSize: 12 // 默认字体
 };
 
 class StoreManager {
@@ -83,11 +82,11 @@ class StoreManager {
       // console.log("Store loaded:", this.store.path); // 打印存储路径，确保加载成功
     }
 
-    logManager.info("watching: 开始监控配置文件变化");
+    // logManager.info("watching: 开始监控配置文件变化");
     fs.watchFile(this.store.path, async (curr, prev) => {
-      logManager.info("watching: store changed");
+      // logManager.info("watching: store changed");
       if (curr.mtime === prev.mtime) {
-        logManager.info("watching: store changed but no change");
+        // logManager.info("watching: store changed but no change");
         return;
       }
 
