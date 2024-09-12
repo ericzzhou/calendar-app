@@ -23,6 +23,8 @@ class RenderProcess {
       defaultEventSize: 20, // 默认加载的事件数量
       defaultFontSize: 12, // 默认字体
     };
+
+    this.countdownJobId = null;
   }
 
   /**
@@ -66,6 +68,8 @@ class RenderProcess {
 
     ipcRenderer.on("html", async (event, html) => {
       document.getElementById("eventList").innerHTML = html;
+
+      this.updateEventTimes();
     });
 
     ipcRenderer.on("refresh", async (event) => {
@@ -101,7 +105,7 @@ class RenderProcess {
       if (!dom) {
         return;
       }
-      
+
       dom.style.display = "block";
       dom.innerHTML = dowloadTips;
     });
@@ -179,10 +183,71 @@ class RenderProcess {
     return events;
   }
 
+  /**
+   * 计算会议开始时间
+   * @param {*} startTime
+   * @returns
+   */
+  calculateTimeToStart(startTime) {
+    if (!startTime || startTime.length < 1) {
+      return "";
+    }
+
+    // 今天
+    const today = new Date();
+    const now = new Date();
+    const eventTime = new Date(startTime);
+    const timeDifference = eventTime - now;
+
+    const isToday =
+      eventTime.getDate() === today.getDate() &&
+      eventTime.getMonth() === today.getMonth() &&
+      eventTime.getFullYear() === today.getFullYear();
+
+    if (!isToday) {
+      return "下一个";
+    }
+
+    if (timeDifference <= 0) {
+      return "现在";
+    }
+
+    const minutes = Math.floor(timeDifference / (1000 * 60)); // 转换为分钟
+    if (minutes < 60) {
+      return `${minutes} 分钟后`;
+    } else {
+      const hours = (minutes / 60).toFixed(1); // 转换为小时并保留一位小数
+      return `${hours} 小时后`;
+    }
+  }
+
+  updateEventTimes() {
+    console.log("刷新时间倒计时提示");
+    const eventContainers = document.querySelectorAll(".event-con");
+
+    let index = 0;
+    eventContainers.forEach((eventEle) => {
+      index++;
+
+      const startTime = eventEle.dataset.starttime;
+      const timeToStartElement = eventEle.querySelector(".time-to-start");
+      const timeToStart = this.calculateTimeToStart(startTime);
+      timeToStartElement.textContent = timeToStart;
+
+      if (index > 1) {
+        timeToStartElement.style.display = "none";
+      }
+    });
+  }
+
   init() {
     this.listeningMainEvent();
     this.listeningPageEvent();
     this.refresh();
+
+    this.countdownJobId = setInterval(() => {
+      this.updateEventTimes();
+    }, 1000 * 60); // 每分钟更新一次
   }
   async refresh() {
     // 向主线程请求获取持久化的令牌
@@ -191,6 +256,10 @@ class RenderProcess {
     }
     const events = await this.getEventsFromGoogleCalendar();
     this.sendEventToMain("calendar-events", events);
+
+    // if (this.countdownJobId) {
+    //   clearInterval(this.countdownJobId);
+    // }
   }
 }
 

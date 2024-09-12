@@ -103,6 +103,7 @@ const formatRenderData = (groupedEvents) => {
       events: groupedEvents.today.map((event) => ({
         ...event,
         start: formatDateTime(event.start.dateTime),
+        startDatetime:event.start.dateTime,
         duration: formatDuration(event.start.dateTime, event.end.dateTime),
       })),
     });
@@ -114,6 +115,7 @@ const formatRenderData = (groupedEvents) => {
       events: groupedEvents.tomorrow.map((event) => ({
         ...event,
         start: formatDateTime(event.start.dateTime),
+        startDatetime:event.start.dateTime,
         duration: formatDuration(event.start.dateTime, event.end.dateTime),
       })),
     });
@@ -128,6 +130,7 @@ const formatRenderData = (groupedEvents) => {
         ...group.events.map((event) => ({
           ...event,
           start: formatDateTime(event.start.dateTime),
+          startDatetime:event.start.dateTime,
           duration: formatDuration(event.start.dateTime, event.end.dateTime),
         }))
       );
@@ -140,6 +143,7 @@ const formatRenderData = (groupedEvents) => {
       events: group.events.map((event) => ({
         ...event,
         start: formatDateTime(event.start.dateTime),
+        startDatetime:event.start.dateTime,
         duration: formatDuration(event.start.dateTime, event.end.dateTime),
       })),
     });
