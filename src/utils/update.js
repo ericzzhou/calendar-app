@@ -1,7 +1,7 @@
 const path = require("path");
 const { app, dialog } = require("electron");
 const { autoUpdater } = require("electron-updater");
-// const logManager = require("./logManager");
+const logManager = require("./logManager");
 const notification = require("./notification");
 
 const log = require("electron-log");
