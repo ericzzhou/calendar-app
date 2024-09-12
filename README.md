@@ -41,3 +41,8 @@ sudo npm run build #打包
 - 所有平台都支持下载进度和分阶段部署。
 - 开箱即用地支持不同的提供商：（GitHub Releases、Amazon S3、DigitalOcean Spaces、Keygen 和通用 HTTP（s） 服务器）。
 - 您只需要 2 行代码即可使其工作。
+
+# 补充其他
+
+- 安装包位置：C:\Users\ericz\AppData\Local\Programs\calendar-app
+- 自动更新下载目录：C:\Users\ericz\AppData\Local\calendar-app-updater
