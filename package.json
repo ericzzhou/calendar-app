@@ -4,7 +4,7 @@
   "description": "calendar-app 日程提醒",
   "keywords": [],
   "main": "./src/main.js",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "author": "ericz",
   "scripts": {
     "start": "electron .",
