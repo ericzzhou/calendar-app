@@ -91,3 +91,9 @@ body {
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.3); /* 阴影 */
   background-color: #fff;
 }
+
+#download-progress {
+  text-align: center;
+  background-color: #ede96d;
+  padding: 4px;
+}

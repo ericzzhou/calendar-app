@@ -4,19 +4,19 @@ const { autoUpdater } = require("electron-updater");
 const logManager = require("./logManager");
 const notification = require("./notification");
 
+const log = require("electron-log");
+
+// 配置日志文件路径
+log.transports.file.file = path.join(app.getPath("userData"), "main.log");
+log.transports.file.level = "debug";
+autoUpdater.logger = log;
+
 const checkForUpdates = async () => {
   logManager.info("检查更新");
   // autoUpdater.checkForUpdates();
-  const isDev = await import("electron-is-dev");
-  if (isDev) {
-    // 开发环境下强制启用更新检查
-    autoUpdater.autoDownload = false; // 可以关闭自动下载以手动控制
-    autoUpdater.checkForUpdates();
-  } else {
-    autoUpdater.checkForUpdatesAndNotify();
-  }
+  autoUpdater.checkForUpdatesAndNotify();
 };
-const checkUpdate = (serverUrl) => {
+const checkUpdate = (serverUrl, callback) => {
   try {
     // autoUpdater.setFeedURL(feed);
     checkForUpdates();
@@ -68,6 +68,24 @@ const checkUpdate = (serverUrl) => {
     dialog.showMessageBox(dialogOpts).then((returnValue) => {
       if (returnValue.response === 0) autoUpdater.quitAndInstall();
     });
+  });
+
+  autoUpdater.on("download-progress", (progressObj) => {
+    if (callback && typeof callback === "function") {
+      callback(progressObj);
+    }
+
+    let log_message = "Download speed: " + progressObj.bytesPerSecond;
+    log_message = log_message + " - Downloaded " + progressObj.percent + "%";
+    log_message =
+      log_message +
+      " (" +
+      progressObj.transferred +
+      "/" +
+      progressObj.total +
+      ")";
+    logManager.info(log_message);
+    // sendStatusToWindow(log_message);
   });
 };
 

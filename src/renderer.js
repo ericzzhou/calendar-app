@@ -92,8 +92,21 @@ class RenderProcess {
       });
     });
 
-    ipcRenderer.on("version", async (event,version) => {
-      document.getElementById("version").innerHTML = version
+    ipcRenderer.on("version", async (event, version) => {
+      document.getElementById("version").innerHTML = version;
+    });
+
+    ipcRenderer.on("download-progress", (event, progressObj) => {
+      const dom = document.getElementById("download-progress");
+      if (!dom) {
+        return;
+      }
+      const downloadMesage = `新版本：已下载 ${Math.floor(
+        progressObj.percent
+      )}%`;
+
+      dom.style.display = "block";
+      dom.innerHTML = downloadMesage;
     });
   }
 
@@ -136,8 +149,6 @@ class RenderProcess {
         this.sendEventToMain("show-context-menu", link);
       }
     });
-
-    
   }
 
   /**
@@ -175,7 +186,6 @@ class RenderProcess {
     this.listeningMainEvent();
     this.listeningPageEvent();
     this.refresh();
-    
   }
   async refresh() {
     // 向主线程请求获取持久化的令牌

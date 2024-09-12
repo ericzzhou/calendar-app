@@ -54,7 +54,7 @@ class MainProcess {
     win.webContents.send("storePath", await storeManager.getStorePath());
 
     win.webContents.send("refresh");
-    win.webContents.send("version",app.getVersion())
+    win.webContents.send("version", app.getVersion());
 
     logManager.info("init mainWin event : minimize ......");
     // 当窗口最小化时隐藏到托盘
@@ -84,7 +84,22 @@ class MainProcess {
     logManager.info("init page event ......");
     this.onRenderEvent();
 
-    checkUpdate(this.configuration.serverUrl);
+    checkUpdate(this.configuration.serverUrl, (progressObj) => {
+      let log_message = "Download speed: " + progressObj.bytesPerSecond;
+      log_message = log_message + " - Downloaded " + progressObj.percent + "%";
+      log_message =
+        log_message +
+        " (" +
+        progressObj.transferred +
+        "/" +
+        progressObj.total +
+        ")";
+
+      this.windows.main.webContents.send(
+        "download-progress",
+        progressObj
+      );
+    });
     //#region  APP 事件监听
     // 当窗口关闭时隐藏到托盘，而不是完全退出应用
     app.on("close", (event) => {
