@@ -234,8 +234,9 @@ class RenderProcess {
       const timeToStart = this.calculateTimeToStart(startTime);
       timeToStartElement.textContent = timeToStart;
 
-      if (index > 1) {
-        timeToStartElement.style.display = "none";
+      if (index <= 1) {
+        timeToStartElement.style.display = "inline";
+        return;
       }
     });
   }

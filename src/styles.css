@@ -103,9 +103,10 @@ body {
   background-color: #0f6cbd;
   color: #fff;
   padding: 2px 5px 2px 5px;
+  margin-top: 10px;
 }
 
 .event-con{
   display: block;
-  margin-top: 10px;
+  
 }
