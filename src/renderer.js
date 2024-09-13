@@ -31,62 +31,17 @@ class RenderProcess {
    * 监听主线程消息
    */
   listeningMainEvent() {
-    // 用户授权成功
-    ipcRenderer.on("server-port", async (event, port) => {
-      this.serverPort = port;
-      this.oauth2Client = new google.auth.OAuth2(
-        CLIENT_ID,
-        CLIENT_SECRET,
-        `http://localhost:${port}`
-      );
-    });
-
-    //主线程获取到持久化的token
-    ipcRenderer.on("tokens-retrieved", (event, tokens) => {
-      console.log("从主线程获取到持久化的token:", tokens);
-      if (tokens) {
-        this.googleOauthToken = tokens;
-        this.oauth2Client.setCredentials(tokens);
-
-        this.refresh();
-      } else {
-        // 用户未登录，显示授权按钮
-        document.getElementById("authButton").style.display = "block";
-      }
-    });
-
-    // 用户授权成功
-    ipcRenderer.on("auth-code", async (event, code) => {
-      const { tokens } = await this.oauth2Client.getToken(code);
-      this.oauth2Client.setCredentials(tokens);
-      this.googleOauthToken = tokens;
-      // 通知主线程持久化令牌
-      this.sendEventToMain("save-tokens", tokens);
-
-      this.refresh();
-    });
-
     ipcRenderer.on("html", async (event, html) => {
       document.getElementById("eventList").innerHTML = html;
-
       this.updateEventTimes();
-    });
-
-    ipcRenderer.on("refresh", async (event) => {
-      this.refresh();
     });
 
     ipcRenderer.on("configuration", async (event, value) => {
       console.log("configuration", value);
       this.configuration = value;
-      // this.refresh();
     });
 
     ipcRenderer.on("storePath", async (event, value) => {
-      // document.getElementById("footer").innerHTML = `
-      // <a target="_blank" href="${value}">配置文件</a>
-      // `;
-
       const linkElement = document.getElementById("config-link");
       // linkElement.textContent = value
       // linkElement.href = "#"
@@ -120,22 +75,23 @@ class RenderProcess {
    * 监听页面事件
    */
   listeningPageEvent() {
-    // 点击google授权按钮进行授权
-    const authButton = document.getElementById("authButton");
+   
 
-    const authEvent = () => {
-      const authUrl = this.oauth2Client.generateAuthUrl({
-        access_type: "offline",
-        scope: SCOPES,
-      });
+    const containerEle = document.getElementsByClassName("container")[0];
+    containerEle.addEventListener("click", (e) => {
+      console.log(`clicked:`);
+      console.log(e.target);
+      console.log(e.target.id);
+      e.preventDefault();
+      // 点击google授权按钮进行授权
+      if (e.target.id === "authButton") {
+        this.sendEventToMain("open-google-auth-url");
+      }
+    });
 
-      this.sendEventToMain("open-auth-url", authUrl);
-    };
-    authButton.removeEventListener("click", authEvent);
-    authButton.addEventListener("click", authEvent);
+    containerEle.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
 
-    const eventsContainer = document.getElementById("eventList");
-    eventsContainer.addEventListener("contextmenu", (e) => {
       // 使用 closest 确保捕获到正确的目标元素，防止点击到子元素导致问题
       const targetElement = e.target.closest(".event-container");
       if (targetElement) {
@@ -150,37 +106,23 @@ class RenderProcess {
         this.sendEventToMain("show-context-menu", link);
       }
     });
-  }
 
-  /**
-   * 从 Google Calendar 获取数据
-   * @param {*} maxResults
-   * @returns
-   */
-  async getEventsFromGoogleCalendar(maxResults = 15) {
-    console.log("googleOauthToken", this.googleOauthToken);
-    if (!this.googleOauthToken) {
-      return;
-    }
+    // const eventsContainer = document.getElementById("eventList");
+    // eventsContainer.addEventListener("contextmenu", (e) => {
+    //   // 使用 closest 确保捕获到正确的目标元素，防止点击到子元素导致问题
+    //   const targetElement = e.target.closest(".event-container");
+    //   if (targetElement) {
+    //     document.querySelectorAll(".event-container").forEach((el) => {
+    //       el.classList.remove("highlighted");
+    //     });
+    //     targetElement.classList.add("highlighted");
 
-    maxResults = this.configuration.defaultEventSize;
-    document.getElementById("authButton").style.display = "none";
-
-    const calendar = google.calendar({
-      version: "v3",
-      auth: this.oauth2Client,
-    });
-    const res = await calendar.events.list({
-      calendarId: "primary",
-      timeMin: new Date().toISOString(),
-      maxResults: maxResults,
-      singleEvents: true,
-      orderBy: "startTime",
-    });
-
-    const events = res.data.items;
-
-    return events;
+    //     console.log(`触发事件的元素${e.target}`, e);
+    //     e.preventDefault();
+    //     const link = targetElement.dataset.link;
+    //     this.sendEventToMain("show-context-menu", link);
+    //   }
+    // });
   }
 
   /**
@@ -242,33 +184,18 @@ class RenderProcess {
   }
 
   init() {
-    this.listeningMainEvent();
     this.listeningPageEvent();
-    this.refresh();
+    this.listeningMainEvent();
+    
 
     this.countdownJobId = setInterval(() => {
       this.updateEventTimes();
     }, 1000 * 60); // 每分钟更新一次
   }
-  async refresh() {
-    // 向主线程请求获取持久化的令牌
-    if (!this.googleOauthToken) {
-      this.sendEventToMain("get-tokens");
-    }
-    const events = await this.getEventsFromGoogleCalendar();
-    this.sendEventToMain("calendar-events", events);
-
-    // if (this.countdownJobId) {
-    //   clearInterval(this.countdownJobId);
-    // }
-  }
 }
 
-// // 监听从主进程发送的事件数据
-// ipcRenderer.on("events-data", (event, events) => {
-//   const groupedEvents = groupEventsByDate(events);
-//   renderGroupedEvents(groupedEvents);
-// });
-
-const render = new RenderProcess();
-render.init();
+window.addEventListener("DOMContentLoaded", () => {
+  console.log("DOMContentLoaded");
+  const render = new RenderProcess();
+  render.init();
+});

@@ -1,26 +1,36 @@
 <!-- template.hbs -->
+{{#if data}}
 {{#if fontSize}}
 <style>body{ font-size: {{fontSize}}px;  }</style>
 {{/if}}
-{{#each data}}
+    {{#each data}}
 
-<h3>{{date}} {{DayOfWeek}}</h3>
-<div class="event">
-    {{#each events}}
-    <div class="event-con" data-starttime="{{startDatetime}}">
-        <span class="time-to-start" style="display: none;"> </span>
-        <div class="event-container" data-link="{{hangoutLink}}" >
-            <div class="event-time">{{start}} <br> {{duration}}</div>
-            <div class="event-summary">
-                <div class="summary"><strong>{{summary}}</strong></div>
-                <div class="email">{{creator.email}}</div>
-                {{#if location}}
-                <div class="location">{{location}}</div>
+    <h3>{{date}} {{DayOfWeek}}</h3>
+    <div class="event">
+        {{#each events}}
+        <div class="event-con" data-starttime="{{startDatetime}}">
+            <span class="time-to-start" style="display: none;"> </span>
+            <div class="event-container" data-link="{{hangoutLink}}" >
+                <div class="event-time">{{start}} <br> {{duration}}</div>
+                <div class="event-summary">
+                    <div class="summary"><strong>{{summary}}</strong></div>
+                    <div class="email">{{creator.email}}</div>
+                    {{#if location}}
+                    <div class="location">{{location}}</div>
+                    {{/if}}
+                </div>
+                {{#if isOptional}}
+                    <div class="isOptional">可选</div>
                 {{/if}}
+               
             </div>
+             
         </div>
+        {{/each}}
+
     </div>
     {{/each}}
+{{else}}
+<button id="authButton">Sign in with Google</button>
+{{/if}}
 
-</div>
-{{/each}}

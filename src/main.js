@@ -47,7 +47,7 @@ class MainProcess {
     win.webContents.send("configuration", this.configuration);
     win.webContents.send("oauthTokens", this.oauthTokens);
     win.webContents.send("storePath", await storeManager.getStorePath());
-    win.webContents.send("refresh");
+    // win.webContents.send("refresh");
     win.webContents.send("version", app.getVersion());
     this.windows.main.show();
   }
@@ -127,20 +127,22 @@ class MainProcess {
       // logManager.info("Tokens saved successfully");
     });
 
-    ipcMain.on("get-tokens", async (event) => {
-      const tokens = await storeManager.getStoreByKey("oauthTokens");
-      // console.log("观察", tokens);
-      event.reply("tokens-retrieved", tokens);
-    });
+    // ipcMain.on("get-tokens", async (event) => {
+    //   const tokens = await storeManager.getStoreByKey("oauthTokens");
+    //   // console.log("观察", tokens);
+    //   event.reply("tokens-retrieved", tokens);
+    // });
 
-    ipcMain.on("calendar-events", (event, events) => {
-      eventManager.processEvents(events); // 处理事件并安排提醒
-      // this.buildTemplate(events);
-      const html = eventManager.buildTemplate(events, this.configuration);
-      this.windows.main.webContents.send("html", html); //TODO 改成 replay
-    });
+    // ipcMain.on("calendar-events", (event, events) => {
+    //   eventManager.processEvents(events); // 处理事件并安排提醒
+    //   // this.buildTemplate(events);
+    //   const html = eventManager.buildTemplate(events, this.configuration);
+    //   this.windows.main.webContents.send("html", html); //TODO 改成 replay
+    // });
 
-    ipcMain.on("open-auth-url", (event, authUrl) => {
+    ipcMain.on("open-google-auth-url", (event) => {
+      const authUrl = eventManager.generateAuthUrl(this.httpServerPort);
+      console.log("authUrl:", authUrl);
       shell.openExternal(authUrl);
     });
 
@@ -156,39 +158,39 @@ class MainProcess {
     });
   }
 
+  async refreshEventHtml(httpServerPort) {
+    const eventsHtml = await eventManager.buildEventsHtml(httpServerPort);
+    this.windows.main.webContents.send("html", eventsHtml);
+  }
   createHttpServer() {
-    this.httpServer = http.createServer((req, res) => {
+    this.httpServer = http.createServer(async (req, res) => {
       const queryObject = url.parse(req.url, true).query;
       if (queryObject.code) {
         console.log("Google 授权成功");
         res.writeHead(200, { "Content-Type": "text/plain" });
         res.end("Authorization successful! You can close this window.");
+        const code = queryObject.code;
+        
+        const tokens = await eventManager.getTokenFromOAuthClient(code);
+        
+        await storeManager.setStore("oauthTokens", tokens);
+        this.refreshEventHtml(this.httpServerPort);
 
-        this.windows.main.webContents.send("auth-code", queryObject.code);
         // this.httpServer.close();
       }
     });
 
-    this.httpServer.listen(0, () => {
+    this.httpServer.listen(0, async () => {
       const address = this.httpServer.address();
       this.httpServerPort = address.port;
+      
+      await this.refreshEventHtml(address.port);
       this.windows.main.webContents.send("server-port", address.port);
-      console.log(`Server listening on port: ${address.port}`);
+
+      logManager.info(
+        `OAuth Capture Server listening on port: ${address.port}`
+      );
     });
-  }
-
-  setIntervalJob() {
-    if (this.setIntervalId) {
-      clearInterval(this.setIntervalId);
-      this.setIntervalId = null;
-    }
-
-    const eventInterval = this.configuration.eventInterval;
-    // logManager.info(`setIntervalJob 设置事件更新间隔：${eventInterval} 分钟`);
-    this.setIntervalId = setInterval(() => {
-      console.log("refresh 定时任务执行");
-      this.windows.main.webContents.send("refresh");
-    }, eventInterval * 60 * 1000);
   }
 
   async Init() {
@@ -219,22 +221,20 @@ class MainProcess {
     this.oauthTokens = await storeManager.getStoreByKey("oauthTokens");
     await this.onAppEvent();
 
-    // this.setIntervalJob();
-    // logManager.info("正在设置定时刷新任务");
     eventManager.setIntervalJob(() => {
       console.log("refresh 定时任务执行");
-      this.windows.main.webContents.send("refresh");
+      this.refreshEventHtml(this.httpServerPort);
     });
 
     // logManager.info("init 启动配置文件监控，当发生变化时向主窗口传递数据");
     // 启动配置文件监控，当发生变化时向主窗口传递数据
-    await storeManager.watchStoreChanged((newConf) => {
+    await storeManager.watchStoreChanged(async (newConf) => {
       // logManager.info("configuration changed ......");
       // logManager.info(newConf);
       this.configuration = newConf;
       if (this.windows.main) {
         this.windows.main.webContents.send("configuration", newConf);
-        this.windows.main.webContents.send("refresh");
+        this.refreshEventHtml(this.httpServerPort);
       }
     });
   }
@@ -249,5 +249,3 @@ app.setLoginItemSettings({
 
 const main = new MainProcess();
 main.Init();
-
-

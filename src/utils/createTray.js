@@ -2,7 +2,7 @@ const { app, Tray, Menu } = require("electron");
 const path = require("path");
 const notification = require("./notification");
 const storeManager = require("./storeManager");
-
+const eventManager = require("./eventManager");
 
 /***
  * 创建并返回系统托盘对象
@@ -37,7 +37,10 @@ const createTray = (mainWin) => {
       label: "刷新日历数据",
       click: () => {
         if (mainWin) {
-          mainWin.webContents.send("refresh");
+          console.log("refresh");
+          eventManager.buildEventsHtml().then((eventsHtml) => {
+            mainWin.webContents.send("html", eventsHtml);
+          });
         }
       },
     },
@@ -62,7 +65,7 @@ const createTray = (mainWin) => {
       },
     },
     {
-      label: "退出",
+      label: "完全退出",
       click: () => {
         app.quit();
       },

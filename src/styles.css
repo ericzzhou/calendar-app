@@ -11,7 +11,7 @@ body {
 }
 
 #authButton {
-  display: none;
+  width: 100%;
   padding: 10px 20px;
   background-color: #4caf50;
   color: white;
@@ -106,7 +106,15 @@ body {
   margin-top: 10px;
 }
 
-.event-con{
+.event-con {
   display: block;
-  
+}
+
+.isOptional {
+  background: #696969;
+  display: block;
+  height: 100%;
+  padding: 5px;
+  border-radius: 5px;
+  color: #fff;
 }

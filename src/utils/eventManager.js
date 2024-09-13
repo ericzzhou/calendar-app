@@ -5,7 +5,15 @@ const path = require("path");
 const { groupEventsByDate, formatRenderData } = require("./utils");
 const handlebars = require("handlebars");
 const fs = require("fs");
-// const logManager = require("./logManager");
+const logManager = require("./logManager");
+const { google } = require("googleapis");
+
+const CLIENT_ID =
+  "356247018475-0hdovvr97o9beo47sjkn2e38eibl6epb.apps.googleusercontent.com";
+const CLIENT_SECRET = "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";
+const REDIRECT_URI = "http://localhost:12345"; // 使用本地重定向
+
+const SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"];
 
 class EventManager {
   constructor() {
@@ -15,6 +23,69 @@ class EventManager {
     });
     this.setIntervalId = null; // 定时读取新事件的定时器
   }
+
+  async getTokenFromOAuthClient(code) {
+    const { tokens } = await this.oauth2Client.getToken(code);
+    return tokens;
+  }
+
+  createOAuth2Client(httpServerPort) {
+    this.oauth2Client = new google.auth.OAuth2(
+      CLIENT_ID,
+      CLIENT_SECRET,
+      `http://localhost:${httpServerPort}`
+    );
+  }
+  generateAuthUrl(httpServerPort) {
+    if (this.oauth2Client == null) {
+      this.createOAuth2Client(httpServerPort);
+    }
+
+    const authUrl = this.oauth2Client.generateAuthUrl({
+      access_type: "offline",
+      scope: SCOPES,
+    });
+    return authUrl;
+  }
+  /**
+   * 1. 从 google 获取日历里边
+   * @param {*} maxResults
+   * @returns
+   */
+  async getEventsFromCalendar(maxResults = 15, httpServerPort) {
+    const googleOAuthToken = await storeManager.getGoogleOAuthToken();
+    if (!googleOAuthToken) {
+      logManager.info("未获取到Google OAuth Token");
+      return null;
+    }
+
+    if (this.oauth2Client == null) {
+      this.createOAuth2Client(httpServerPort);
+    }
+
+    this.oauth2Client.setCredentials(googleOAuthToken);
+
+    const conf = await storeManager.getConfiguration();
+    maxResults = conf.defaultEventSize;
+
+    const calendar = google.calendar({
+      version: "v3",
+      auth: this.oauth2Client,
+    });
+    const res = await calendar.events.list({
+      calendarId: "primary",
+      timeMin: new Date().toISOString(),
+      maxResults: maxResults,
+      singleEvents: true,
+      orderBy: "startTime",
+    });
+
+    const events = res.data.items;
+
+    console.log(`Main Process 获取到[${events.length}]个事件`);
+    return events;
+  }
+
   /**
    * 给单个事件设置提醒任务
    * @param {*} event 事件信息
@@ -22,7 +93,7 @@ class EventManager {
    * @param {*} notificationJobs 任务job池
    * @returns
    */
-  scheduleNotification(event) {
+  setSingleScheduleNotification(event) {
     // 解析会议的开始时间
     const eventStartTime = new Date(event.start.dateTime); // 假设 event.start.dateTime 是 ISO 时间格式
     const notificationTime = new Date(
@@ -84,11 +155,11 @@ class EventManager {
   }
 
   /**
-   * 处理日历事件
+   * 2. 设置日历提醒
    * @param {*} events
    * @returns
    */
-  processEvents(events) {
+  async setEventsNotification(events) {
     if (!events) {
       // logManager.info("没有事件需要设置提醒");
       return;
@@ -104,12 +175,17 @@ class EventManager {
 
     events.forEach((event) => {
       if (event.start && event.start.dateTime) {
-        this.scheduleNotification(event); // 为每个事件设置提醒
+        this.setSingleScheduleNotification(event); // 为每个事件设置提醒
       }
     });
   }
 
-  buildTemplate(events, configuration) {
+  /**
+   * 3. 根据模板生成events html
+   * @param {*} events
+   * @returns
+   */
+  async buildTemplate(events) {
     const group = groupEventsByDate(events);
     const data = formatRenderData(group);
     const templatePath = path.join(__dirname, "../", "index.hbs");
@@ -117,13 +193,27 @@ class EventManager {
     const templateSource = fs.readFileSync(templatePath, "utf8");
 
     const template = handlebars.compile(templateSource);
-
+    const configuration = await storeManager.getConfiguration();
     const datas = {
       data: data,
       fontSize: configuration.defaultFontSize,
     };
     // console.log("datas", datas);
     const html = template(datas);
+    // console.log("模板输出：", html);
+    return html;
+  }
+
+  /**
+   * 4. 生成事件的 html
+   * @returns
+   */
+  async buildEventsHtml(httpServerPort) {
+    const events = await this.getEventsFromCalendar(null, httpServerPort);
+
+    this.setEventsNotification(events);
+
+    const html = await this.buildTemplate(events);
     return html;
   }
 
@@ -135,7 +225,7 @@ class EventManager {
 
     const eventInterval = this.configuration.eventInterval;
     // logManager.info(`setIntervalJob 设置事件更新时间间隔：${eventInterval} 分钟`);
-    this.setIntervalId = setInterval(() => {
+    this.setIntervalId = setInterval(async () => {
       if (callback) callback();
       // console.log("refresh 定时任务执行");
       // this.win.webContents.send("refresh");

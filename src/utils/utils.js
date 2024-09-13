@@ -94,6 +94,17 @@ const getDayOfWeek = (dateTime) => {
   return date.toLocaleDateString("zh-CN", options); // 返回中文的星期几名称，例如 "星期一"
 };
 
+const checkIsOptional = (event) => {
+  // 遍历attendees数组
+  for (const attendee of event.attendees) {
+    // 检查是否有self为true且optional为true的attendee
+    if (attendee.self === true && attendee.optional === true) {
+      return true;
+    }
+  }
+  // 如果没有匹配的条件，返回false
+  return false;
+};
 const formatRenderData = (groupedEvents) => {
   const events = [];
   if (groupedEvents.today.length > 0) {
@@ -103,8 +114,9 @@ const formatRenderData = (groupedEvents) => {
       events: groupedEvents.today.map((event) => ({
         ...event,
         start: formatDateTime(event.start.dateTime),
-        startDatetime:event.start.dateTime,
+        startDatetime: event.start.dateTime,
         duration: formatDuration(event.start.dateTime, event.end.dateTime),
+        isOptional: checkIsOptional(event),
       })),
     });
   }
@@ -115,8 +127,9 @@ const formatRenderData = (groupedEvents) => {
       events: groupedEvents.tomorrow.map((event) => ({
         ...event,
         start: formatDateTime(event.start.dateTime),
-        startDatetime:event.start.dateTime,
+        startDatetime: event.start.dateTime,
         duration: formatDuration(event.start.dateTime, event.end.dateTime),
+        isOptional: checkIsOptional(event),
       })),
     });
   }
@@ -130,8 +143,9 @@ const formatRenderData = (groupedEvents) => {
         ...group.events.map((event) => ({
           ...event,
           start: formatDateTime(event.start.dateTime),
-          startDatetime:event.start.dateTime,
+          startDatetime: event.start.dateTime,
           duration: formatDuration(event.start.dateTime, event.end.dateTime),
+          isOptional: checkIsOptional(event),
         }))
       );
       return;
@@ -143,8 +157,9 @@ const formatRenderData = (groupedEvents) => {
       events: group.events.map((event) => ({
         ...event,
         start: formatDateTime(event.start.dateTime),
-        startDatetime:event.start.dateTime,
+        startDatetime: event.start.dateTime,
         duration: formatDuration(event.start.dateTime, event.end.dateTime),
+        isOptional: checkIsOptional(event),
       })),
     });
   });

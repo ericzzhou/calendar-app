@@ -61,7 +61,7 @@ class WindowManager {
     const windowWidth = 300; // 假设窗口宽度是 800
     const windowHeight = 800;
     const xPos = width - windowWidth; // 计算窗口的 x 坐标，使其靠右侧
-    const yPos = 30; // 从屏幕顶部开始吸附
+    const yPos = height - windowHeight; // 从屏幕顶部开始吸附
 
     const win = new BrowserWindow({
       width: windowWidth,

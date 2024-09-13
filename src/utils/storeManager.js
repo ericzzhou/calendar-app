@@ -8,7 +8,7 @@ _defaultConfiguration = {
   eventInterval: 5, // 刷新事件间隔分钟
   notificationTime: 10, //事件提醒时间，提前x分钟
   defaultEventSize: 20, // 默认加载的事件数量
-  defaultFontSize: 12 // 默认字体
+  defaultFontSize: 12, // 默认字体
 };
 
 class StoreManager {
@@ -43,6 +43,10 @@ class StoreManager {
       await this.setDefaultConfiguration();
     }
     return configuration;
+  }
+
+  async getGoogleOAuthToken() {
+    return await this.getStoreByKey("oauthTokens");
   }
 
   /**
