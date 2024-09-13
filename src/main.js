@@ -7,7 +7,7 @@ const notifier = require("node-notifier");
 
 const createTray = require("./utils/createTray");
 const storeManager = require("./utils/storeManager");
-// const logManager = require("./utils/logManager");
+const logManager = require("./utils/logManager");
 const createContextMenu = require("./utils/contextMenu");
 const eventManager = require("./utils/eventManager");
 const winManager = require("./utils/winManager");
@@ -132,6 +132,16 @@ class MainProcess {
         await this.InitMainWindow();
       }
     });
+
+    const loginItemSetParams = {
+      openAtLogin: true, // 是否开机启动
+      path: app.getPath("exe"), // 可执行文件的路径
+      args: ["--hidden"], // 启动传参，--hidden 是启动后隐藏主窗口
+    }
+    app.setLoginItemSettings(loginItemSetParams);
+
+    const loginSettings = app.getLoginItemSettings(loginItemSetParams);
+    logManager.debug(`是否开机启动:${loginSettings.openAtLogin}`);
     //#endregion
   }
 

@@ -4,7 +4,7 @@
   "description": "calendar-app 日程提醒",
   "keywords": [],
   "main": "./src/main.js",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "author": "ericz",
   "scripts": {
     "start": "electron .",
@@ -32,7 +32,8 @@
     ],
     "win": {
       "target": "nsis",
-      "icon": "build/icons/Martz90-Circle-Calendar.ico"
+      "icon": "build/icons/Martz90-Circle-Calendar.ico",
+      "requestedExecutionLevel": "requireAdministrator"
     },
     "nsis": {
       "oneClick": true,

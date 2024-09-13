@@ -18,5 +18,9 @@ class LogManager {
   error(message) {
     log.error(message);
   }
+
+  debug(message) {
+    log.debug(message);
+  }
 }
 module.exports = new LogManager();

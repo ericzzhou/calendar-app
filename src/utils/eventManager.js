@@ -55,11 +55,11 @@ class EventManager {
       // 显示立即提醒
       // const immediateNotification = new Notification({
       //   title: "会议提醒",
-      //   body: `您的会议 "${event.summary}" 即将开始！`,
+      //   body: `会议 "${event.summary}" 即将开始！`,
       // });
       // immediateNotification.show();
 
-      notification("会议提醒", `您的会议 "${event.summary}" 即将开始！`);
+      notification("会议提醒", `会议 "${event.summary}" 即将开始！`);
 
       return; // 跳过后续定时任务设置
     }
@@ -68,11 +68,11 @@ class EventManager {
     const job = schedule.scheduleJob(notificationTime, () => {
       notification(
         "会议提醒",
-        `您的会议 "${event.summary}" 将在${this.configuration.notificationTime}分钟后开始。`
+        `会议 "${event.summary}" 将在${this.configuration.notificationTime}分钟后开始。`
       );
       // const notification = new Notification({
       //   title: "会议提醒",
-      //   body: `您的会议 "${event.summary}" 将在${this.configuration.notificationTime}分钟后开始。`,
+      //   body: `会议 "${event.summary}" 将在${this.configuration.notificationTime}分钟后开始。`,
       // });
       // notification.show();
     });
