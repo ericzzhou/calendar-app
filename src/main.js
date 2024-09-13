@@ -33,71 +33,35 @@ class MainProcess {
     this.oauthTokens = null;
   }
 
-  async InitMainWindow() {
+  /**
+   * 初始化窗口
+   * @returns
+   */
+  async InitWindow() {
     const win = await winManager.createMainWin(
       `${__dirname}/preload.js`,
       `${__dirname}/index.html`
     );
-    // logManager.info("init main window complate ......");
+    this.windows.main = win;
 
-    // logManager.info("init configuration ......");
-    // logManager.info(this.configuration);
     win.webContents.send("configuration", this.configuration);
-
-    // logManager.info("init oauthTokens ......");
-    // logManager.info(this.oauthTokens);
     win.webContents.send("oauthTokens", this.oauthTokens);
-
-    // logManager.info("init store path ......");
-    const storePath = await storeManager.getStorePath();
-
-    // logManager.info(`storePath : ${storePath}`);
     win.webContents.send("storePath", await storeManager.getStorePath());
-
     win.webContents.send("refresh");
     win.webContents.send("version", app.getVersion());
-
-    // logManager.info("init mainWin event : minimize ......");
-    // 当窗口最小化时隐藏到托盘
-    win.on("minimize", (event) => {
-      event.preventDefault();
-      win.hide(); // 最小化时隐藏到系统托盘
-    });
-
-    this.windows.main = win;
-    return win;
+    this.windows.main.show();
   }
 
   async onAppEvent() {
     await app.whenReady();
+    await this.InitWindow();
 
-    // logManager.info("app ready ......");
-
-    // logManager.info("init main window ......");
-    const mainWin = await this.InitMainWindow();
-
-    // logManager.info("init tray ......");
-    this.tray = createTray(mainWin);
-
-    // logManager.info("init http server ......");
-    this.createHttpServer();
-
-    // logManager.info("init page event ......");
+    this.tray = createTray(this.windows.main);
     this.onRenderEvent();
+    this.createHttpServer();
 
     try {
       checkUpdate(this.configuration.serverUrl, (progressObj) => {
-        let log_message = "Download speed: " + progressObj.bytesPerSecond;
-        log_message =
-          log_message + " - Downloaded " + progressObj.percent + "%";
-        log_message =
-          log_message +
-          " (" +
-          progressObj.transferred +
-          "/" +
-          progressObj.total +
-          ")";
-
         const speedFormat = convertBytesPerSecond(progressObj.bytesPerSecond);
 
         const dowloadTips = `新版本：已下载 ${Number(
@@ -112,30 +76,45 @@ class MainProcess {
     //#region  APP 事件监听
     // 当窗口关闭时隐藏到托盘，而不是完全退出应用
     app.on("close", (event) => {
+      console.log("app.on close");
       event.processEvents(); // 阻止默认行为，防止应用关闭
       this.windows.main.hide();
     });
 
     app.on("before-quit", () => {
-      if (this.httpServer) {
-        this.httpServer.close();
+      console.log("app.on before-quit");
+      logManager.info("应用正在退出...");
+
+      try {
+        // 关闭服务
+        if (this.httpServer) {
+          this.httpServer.close();
+          logManager.info("HTTP 服务器已关闭");
+        }
+
+        // 关闭窗口
+        BrowserWindow.getAllWindows().forEach((win) => {
+          win.destroy();
+        });
+      } catch (error) {
+        logManager.error("退出应用时发生错误：");
+        logManager.error(error);
       }
     });
 
     app.on("window-all-closed", () => {
+      console.log("app.on window-all-closed");
+
       // macOS 系统（darwin 平台)
       if (process.platform !== "darwin") {
-        if (this.httpServer) {
-          this.httpServer.close();
-        }
         app.quit();
-        // this.windows.main.hide();
       }
     });
 
     app.on("activate", async () => {
+      console.log("app.on activate");
       if (BrowserWindow.getAllWindows().length === 0) {
-        await this.InitMainWindow();
+        await this.InitWindow();
       }
     });
 
@@ -192,6 +171,7 @@ class MainProcess {
 
     this.httpServer.listen(0, () => {
       const address = this.httpServer.address();
+      this.httpServerPort = address.port;
       this.windows.main.webContents.send("server-port", address.port);
       console.log(`Server listening on port: ${address.port}`);
     });
@@ -222,7 +202,7 @@ class MainProcess {
     };
 
     const loginSettings = app.getLoginItemSettings(loginItemSetParams);
-    logManager.debug(`是否开机启动:${loginSettings.openAtLogin}`);
+    // logManager.debug(`是否开机启动:${loginSettings.openAtLogin}`);
 
     if (!loginSettings.openAtLogin) {
       app.setLoginItemSettings(loginItemSetParams);
