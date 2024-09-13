@@ -85,24 +85,30 @@ class MainProcess {
     // logManager.info("init page event ......");
     this.onRenderEvent();
 
-    checkUpdate(this.configuration.serverUrl, (progressObj) => {
-      let log_message = "Download speed: " + progressObj.bytesPerSecond;
-      log_message = log_message + " - Downloaded " + progressObj.percent + "%";
-      log_message =
-        log_message +
-        " (" +
-        progressObj.transferred +
-        "/" +
-        progressObj.total +
-        ")";
+    try {
+      checkUpdate(this.configuration.serverUrl, (progressObj) => {
+        let log_message = "Download speed: " + progressObj.bytesPerSecond;
+        log_message =
+          log_message + " - Downloaded " + progressObj.percent + "%";
+        log_message =
+          log_message +
+          " (" +
+          progressObj.transferred +
+          "/" +
+          progressObj.total +
+          ")";
 
-      const speedFormat = convertBytesPerSecond(progressObj.bytesPerSecond);
+        const speedFormat = convertBytesPerSecond(progressObj.bytesPerSecond);
 
-      const dowloadTips = `新版本：已下载 ${Number(progressObj.percent).toFixed(
-        2
-      )}%，Speed：${speedFormat}`;
-      this.windows.main.webContents.send("download-progress", dowloadTips);
-    });
+        const dowloadTips = `新版本：已下载 ${Number(
+          progressObj.percent
+        ).toFixed(2)}%，Speed：${speedFormat}`;
+        this.windows.main.webContents.send("download-progress", dowloadTips);
+      });
+    } catch (error) {
+      logManager.error("检查更新失败");
+      logManager.error(error);
+    }
     //#region  APP 事件监听
     // 当窗口关闭时隐藏到托盘，而不是完全退出应用
     app.on("close", (event) => {
