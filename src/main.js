@@ -133,15 +133,6 @@ class MainProcess {
       }
     });
 
-    const loginItemSetParams = {
-      openAtLogin: true, // 是否开机启动
-      path: app.getPath("exe"), // 可执行文件的路径
-      args: ["--hidden"], // 启动传参，--hidden 是启动后隐藏主窗口
-    }
-    app.setLoginItemSettings(loginItemSetParams);
-
-    const loginSettings = app.getLoginItemSettings(loginItemSetParams);
-    logManager.debug(`是否开机启动:${loginSettings.openAtLogin}`);
     //#endregion
   }
 
@@ -214,6 +205,23 @@ class MainProcess {
     }, eventInterval * 60 * 1000);
   }
 
+  /**
+   * 开机启动设置
+   */
+  setOpenAtLogin() {
+    const loginItemSetParams = {
+      openAtLogin: true, // 是否开机启动
+      path: app.getPath("exe"), // 可执行文件的路径
+      args: ["--hidden"], // 启动传参，--hidden 是启动后隐藏主窗口
+    };
+
+    const loginSettings = app.getLoginItemSettings(loginItemSetParams);
+    logManager.debug(`是否开机启动:${loginSettings.openAtLogin}`);
+
+    if (!loginSettings.openAtLogin) {
+      app.setLoginItemSettings(loginItemSetParams);
+    }
+  }
   async Init() {
     // logManager.info("Init App......");
 
@@ -241,6 +249,7 @@ class MainProcess {
     this.configuration = await storeManager.getConfiguration();
     this.oauthTokens = await storeManager.getStoreByKey("oauthTokens");
 
+    this.setOpenAtLogin();
     await this.onAppEvent();
 
     // this.setIntervalJob();
