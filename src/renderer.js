@@ -34,7 +34,8 @@ class RenderProcess {
     });
 
     ipcRenderer.on("appInfomation", async (event, appInfo) => {
-      const { appName, appVersion, appUserData, appStorePath,appReleaseNote } = appInfo;
+      const { appName, appVersion, appUserData, appStorePath, appReleaseNote } =
+        appInfo;
 
       const storePathEle = document.getElementById("store-path");
       storePathEle.addEventListener("click", (e) => {
@@ -52,16 +53,15 @@ class RenderProcess {
       versionEle.innerText = appVersion;
       versionEle.addEventListener("click", (e) => {
         e.preventDefault();
-//         const releaseNote = `
-//         - 响应式 flex 布局事件列表
-//         - 会议持续时间色值改为灰色
-//         - 视觉样式调整
-//         - 优化右键菜单，新增编辑日历、打开日历附件、复制参会人功能
-// `
-        alert(appReleaseNote)
-      })
+        //         const releaseNote = `
+        //         - 响应式 flex 布局事件列表
+        //         - 会议持续时间色值改为灰色
+        //         - 视觉样式调整
+        //         - 优化右键菜单，新增编辑日历、打开日历附件、复制参会人功能
+        // `
+        alert(appReleaseNote);
+      });
     });
-    
 
     ipcRenderer.on("download-progress", (event, dowloadTips) => {
       const dom = document.getElementById("download-progress");
@@ -112,6 +112,14 @@ class RenderProcess {
         const event = targetElement.dataset.event;
         this.sendEventToMain("show-context-menu", event);
       }
+    });
+
+    document.getElementById("github").addEventListener("click",(e) => {
+      e.preventDefault();
+      this.sendEventToMain(
+        "open-file",
+        "https://github.com/ericzzhou/calendar-app"
+      );
     });
 
     // const eventsContainer = document.getElementById("eventList");

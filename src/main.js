@@ -1,7 +1,9 @@
+const path = require("path");
+require('dotenv').config({ path: path.resolve(__dirname,"../", '.env') });
 const { app, BrowserWindow, ipcMain, shell, screen } = require("electron");
 const http = require("http");
 const url = require("url");
-const path = require("path");
+
 const fs = require("fs");
 const notifier = require("node-notifier");
 
@@ -13,7 +15,7 @@ const eventManager = require("./utils/eventManager");
 const winManager = require("./utils/winManager");
 const checkUpdate = require("./utils/update");
 const { convertBytesPerSecond } = require("./utils/utils");
-require('dotenv').config();
+
 class MainProcess {
   constructor() {
     this.windows = {
@@ -33,19 +35,18 @@ class MainProcess {
     this.oauthTokens = null;
   }
 
-  
   /**
    * 从github获取指定tag的release note
-   * @param {*} tag 
-   * @returns 
+   * @param {*} tag
+   * @returns
    */
   async getReleaseNotes(tag) {
     const apiUrl = `https://api.github.com/repos/ericzzhou/calendar-app/releases/tags/v${tag}`;
-    const response = await fetch(apiUrl,{
-      method:"GET",
+    const response = await fetch(apiUrl, {
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
-        'Authorization': `Bearer ${process.env.GH_TOKEN}`,
+        Authorization: `Bearer ${process.env.GH_TOKEN}`,
       },
     });
     // 设置 header 授权
@@ -68,13 +69,13 @@ class MainProcess {
     win.webContents.send("configuration", this.configuration);
     win.webContents.send("oauthTokens", this.oauthTokens);
 
-    const releaseNote = await this.getReleaseNotes(app.getVersion())
+    const releaseNote = await this.getReleaseNotes(app.getVersion());
     win.webContents.send("appInfomation", {
       appName: app.getName(),
       appVersion: app.getVersion(),
       appUserData: app.getPath("userData"),
       appStorePath: await storeManager.getStorePath(),
-      appReleaseNote : releaseNote
+      appReleaseNote: releaseNote,
     });
     this.windows.main.show();
   }
@@ -276,3 +277,25 @@ app.setLoginItemSettings({
 
 const main = new MainProcess();
 main.Init();
+
+// 监听未处理的 Promise 拒绝事件
+process.on("unhandledRejection", (reason, promise) => {
+  if (reason instanceof Error) {
+    // 如果 reason 是 Error 对象，记录详细的错误信息
+    logManager.error(
+      `Unhandled Rejection at: ${promise}, reason: ${reason.message}, stack: ${reason.stack}`
+    );
+  } else {
+    // 如果 reason 不是 Error 对象，直接记录原始信息
+    logManager.error(`Unhandled Rejection at: ${promise}, reason: ${reason}`);
+  }
+  // logManager.error(`Unhandled Rejection at: ${promise}, reason: ${reason}`);
+  // 你还可以根据需要关闭应用程序或处理其他逻辑
+});
+
+// 监听未捕获的异常
+process.on("uncaughtException", (err) => {
+  logManager.error(`Uncaught Exception: ${err.message}`);
+  // // 记录错误并安全地退出应用
+  // process.exit(1);
+});

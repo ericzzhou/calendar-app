@@ -4,11 +4,11 @@
   "description": "calendar-app 日程提醒",
   "keywords": [],
   "main": "./src/main.js",
-  "version": "1.0.18",
+  "version": "1.0.20",
   "author": "ericz",
   "scripts": {
     "start": "electron .",
-    "build": "electron-builder --win --publish=always"
+    "build": "set NODE_ENV=production && electron-builder --win --publish=always"
   },
   "build": {
     "appId": "com.zhouzk.calendarapp",
@@ -16,7 +16,8 @@
     "files": [
       "src/**/*",
       "node_modules/**/*",
-      "build/**/*"
+      "build/**/*",
+      ".env"
     ],
     "directories": {
       "output": "release"
@@ -26,7 +27,7 @@
         "provider": "github",
         "owner": "ericzzhou",
         "repo": "calendar-app",
-        "private": true
+        "private": false
       }
     ],
     "win": {

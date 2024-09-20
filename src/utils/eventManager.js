@@ -1,13 +1,13 @@
+const path = require("path");
+require('dotenv').config({ path: path.resolve(__dirname,"../../", '.env') });
 const schedule = require("node-schedule");
 const notification = require("./notification");
 const storeManager = require("./storeManager");
-const path = require("path");
 const { groupEventsByDate, formatRenderData } = require("./utils");
 const handlebars = require("handlebars");
 const fs = require("fs");
 const logManager = require("./logManager");
 const { google } = require("googleapis");
-require('dotenv').config();
 
 const SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"];
 
@@ -26,11 +26,21 @@ class EventManager {
   }
 
   createOAuth2Client(httpServerPort) {
-    this.oauth2Client = new google.auth.OAuth2(
-      process.env.GOOGLE_OAUTH_CLIENT_ID,
-      process.env.GOOGLE_OAUTH_CLIENT_SECRET,
-      `http://localhost:${httpServerPort}`
-    );
+    try {
+      const clientId = process.env.GOOGLE_OAUTH_CLIENT_ID;
+      const clientSecret = process.env.GOOGLE_OAUTH_CLIENT_SECRET;
+      if (!clientId || !clientSecret) {
+        logManager.error("未配置Google OAuth Client ID或Client Secret");
+      }
+      this.oauth2Client = new google.auth.OAuth2(
+        clientId,
+        clientSecret,
+        `http://localhost:${httpServerPort}`
+      );
+    } catch (error) {
+      logManager.error("创建OAuth2客户端失败:");
+      logManager.error(error);
+    }
   }
   generateAuthUrl(httpServerPort) {
     if (this.oauth2Client == null) {
