@@ -4,6 +4,13 @@
 
 Node.js V20.12.2
 
+.env 文件
+```bash
+GH_TOKEN=xxx # 用于build时直接上传github release
+GOOGLE_OAUTH_CLIENT_ID=xxxxxxx.apps.googleusercontent.com  # google oauth clientid
+GOOGLE_OAUTH_CLIENT_SECRET=GOCSPX-xxx # google oauth client scret
+```
+
 # 打包
 
 
@@ -23,8 +30,8 @@ sudo npm run build #打包
                 "provider": "github",                               //表示发布到github
                 "owner": "ericzzhou",                               // 个人id
                 "repo": "calendar-app",                             // git仓库名
-                "private": true,                                    // 是否私有仓库
-                "token":"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"  //github tonken(至少拥有 repo 权限)
+                "private": true,                                     // 是否私有仓库
+                "token":"ghp_xxxx"  //github tonken(至少拥有 repo 权限) 或者定义系统环境变量：GH_TOKEN:xx
             }
         ],
     }

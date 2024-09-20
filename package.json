@@ -4,7 +4,7 @@
   "description": "calendar-app 日程提醒",
   "keywords": [],
   "main": "./src/main.js",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "author": "ericz",
   "scripts": {
     "start": "electron .",
@@ -26,8 +26,7 @@
         "provider": "github",
         "owner": "ericzzhou",
         "repo": "calendar-app",
-        "private": true,
-        "token":"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"
+        "private": true
       }
     ],
     "win": {
@@ -58,6 +57,7 @@
     }
   },
   "dependencies": {
+    "dotenv": "^16.4.5",
     "electron-is-dev": "^3.0.1",
     "electron-log": "^5.2.0",
     "electron-store": "^10.0.0",

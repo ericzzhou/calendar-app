@@ -13,7 +13,7 @@ const eventManager = require("./utils/eventManager");
 const winManager = require("./utils/winManager");
 const checkUpdate = require("./utils/update");
 const { convertBytesPerSecond } = require("./utils/utils");
-
+require('dotenv').config();
 class MainProcess {
   constructor() {
     this.windows = {
@@ -45,7 +45,7 @@ class MainProcess {
       method:"GET",
       headers: {
         "Content-Type": "application/json",
-        'Authorization': 'Bearer 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',
+        'Authorization': `Bearer ${process.env.GH_TOKEN}`,
       },
     });
     // 设置 header 授权

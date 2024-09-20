@@ -7,11 +7,7 @@ const handlebars = require("handlebars");
 const fs = require("fs");
 const logManager = require("./logManager");
 const { google } = require("googleapis");
-
-const CLIENT_ID =
-  "356247018475-0hdovvr97o9beo47sjkn2e38eibl6epb.apps.googleusercontent.com";
-const CLIENT_SECRET = "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";
-const REDIRECT_URI = "http://localhost:12345"; // 使用本地重定向
+require('dotenv').config();
 
 const SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"];
 
@@ -31,8 +27,8 @@ class EventManager {
 
   createOAuth2Client(httpServerPort) {
     this.oauth2Client = new google.auth.OAuth2(
-      CLIENT_ID,
-      CLIENT_SECRET,
+      process.env.GOOGLE_OAUTH_CLIENT_ID,
+      process.env.GOOGLE_OAUTH_CLIENT_SECRET,
       `http://localhost:${httpServerPort}`
     );
   }
