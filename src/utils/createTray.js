@@ -3,7 +3,9 @@ const path = require("path");
 const notification = require("./notification");
 const storeManager = require("./storeManager");
 const eventManager = require("./eventManager");
-
+const checkUpdate = require("./update");
+const { convertBytesPerSecond } = require("./utils");
+const logManager = require("./logManager");
 /***
  * 创建并返回系统托盘对象
  */
@@ -62,6 +64,29 @@ const createTray = (mainWin) => {
       label: "重置默认设置",
       click: () => {
         storeManager.setDefaultConfiguration();
+      },
+    },
+    {
+      label: "检查更新",
+      click: () => {
+        try {
+          checkUpdate("", (progressObj) => {
+            const speedFormat = convertBytesPerSecond(
+              progressObj.bytesPerSecond
+            );
+
+            const dowloadTips = `新版本：已下载 ${Number(
+              progressObj.percent
+            ).toFixed(2)}%，Speed：${speedFormat}`;
+            mainWin.webContents.send(
+              "download-progress",
+              dowloadTips
+            );
+          });
+        } catch (error) {
+          logManager.error("检查更新失败");
+          logManager.error(error);
+        }
       },
     },
     {

@@ -33,6 +33,27 @@ class MainProcess {
     this.oauthTokens = null;
   }
 
+  
+  /**
+   * 从github获取指定tag的release note
+   * @param {*} tag 
+   * @returns 
+   */
+  async getReleaseNotes(tag) {
+    const apiUrl = `https://api.github.com/repos/ericzzhou/calendar-app/releases/tags/v${tag}`;
+    const response = await fetch(apiUrl,{
+      method:"GET",
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': 'Bearer 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',
+      },
+    });
+    // 设置 header 授权
+
+    const data = await response.json();
+    return data.body;
+  }
+
   /**
    * 初始化窗口
    * @returns
@@ -46,9 +67,15 @@ class MainProcess {
 
     win.webContents.send("configuration", this.configuration);
     win.webContents.send("oauthTokens", this.oauthTokens);
-    win.webContents.send("storePath", await storeManager.getStorePath());
-    // win.webContents.send("refresh");
-    win.webContents.send("version", app.getVersion());
+
+    const releaseNote = await this.getReleaseNotes(app.getVersion())
+    win.webContents.send("appInfomation", {
+      appName: app.getName(),
+      appVersion: app.getVersion(),
+      appUserData: app.getPath("userData"),
+      appStorePath: await storeManager.getStorePath(),
+      appReleaseNote : releaseNote
+    });
     this.windows.main.show();
   }
 
@@ -145,7 +172,7 @@ class MainProcess {
       console.log("authUrl:", authUrl);
       shell.openExternal(authUrl);
     });
-    
+
     ipcMain.on("show-context-menu", (event, obj) => {
       // console.log(`收到右键菜单请求：`,obj);
       createContextMenu(obj);
@@ -170,9 +197,9 @@ class MainProcess {
         res.writeHead(200, { "Content-Type": "text/plain" });
         res.end("Authorization successful! You can close this window.");
         const code = queryObject.code;
-        
+
         const tokens = await eventManager.getTokenFromOAuthClient(code);
-        
+
         await storeManager.setStore("oauthTokens", tokens);
         this.refreshEventHtml(this.httpServerPort);
 
@@ -183,7 +210,7 @@ class MainProcess {
     this.httpServer.listen(0, async () => {
       const address = this.httpServer.address();
       this.httpServerPort = address.port;
-      
+
       await this.refreshEventHtml(address.port);
       this.windows.main.webContents.send("server-port", address.port);
 

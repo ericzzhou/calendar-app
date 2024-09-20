@@ -41,19 +41,35 @@ class RenderProcess {
       this.configuration = value;
     });
 
-    ipcRenderer.on("storePath", async (event, value) => {
-      const linkElement = document.getElementById("config-link");
-      // linkElement.textContent = value
-      // linkElement.href = "#"
-      linkElement.addEventListener("click", (e) => {
-        e.preventDefault();
-        this.sendEventToMain("open-file", value);
-      });
-    });
+    ipcRenderer.on("appInfomation", async (event, appInfo) => {
+      const { appName, appVersion, appUserData, appStorePath,appReleaseNote } = appInfo;
 
-    ipcRenderer.on("version", async (event, version) => {
-      document.getElementById("version").innerHTML = version;
+      const storePathEle = document.getElementById("store-path");
+      storePathEle.addEventListener("click", (e) => {
+        e.preventDefault();
+        this.sendEventToMain("open-file", appStorePath);
+      });
+
+      const userDataEle = document.getElementById("user-data");
+      userDataEle.addEventListener("click", (e) => {
+        e.preventDefault();
+        this.sendEventToMain("open-file", appUserData);
+      });
+
+      const versionEle = document.getElementById("version");
+      versionEle.innerText = appVersion;
+      versionEle.addEventListener("click", (e) => {
+        e.preventDefault();
+//         const releaseNote = `
+//         - 响应式 flex 布局事件列表
+//         - 会议持续时间色值改为灰色
+//         - 视觉样式调整
+//         - 优化右键菜单，新增编辑日历、打开日历附件、复制参会人功能
+// `
+        alert(appReleaseNote)
+      })
     });
+    
 
     ipcRenderer.on("download-progress", (event, dowloadTips) => {
       const dom = document.getElementById("download-progress");
@@ -75,8 +91,6 @@ class RenderProcess {
    * 监听页面事件
    */
   listeningPageEvent() {
-   
-
     const containerEle = document.getElementsByClassName("container")[0];
     containerEle.addEventListener("click", (e) => {
       console.log(`clicked:`);
@@ -103,7 +117,7 @@ class RenderProcess {
         console.log(`触发事件的元素${e.target}`, e);
         e.preventDefault();
         // const link = targetElement.dataset.link;
-        const event = targetElement.dataset.event
+        const event = targetElement.dataset.event;
         this.sendEventToMain("show-context-menu", event);
       }
     });
@@ -187,7 +201,6 @@ class RenderProcess {
   init() {
     this.listeningPageEvent();
     this.listeningMainEvent();
-    
 
     this.countdownJobId = setInterval(() => {
       this.updateEventTimes();

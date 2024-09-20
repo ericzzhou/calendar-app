@@ -31,8 +31,10 @@ const createContextMenu = (event) => {
     {
       label: "复制参会人到剪贴板",
       click: () => {
-        clipboard.writeText(JSON.stringify(attendees)); // 复制链接到剪贴板
-        console.log(attendees);
+        const emailString = attendees
+          .map((attendee) => `- ${attendee.email}`)
+          .join("\r\n");
+        clipboard.writeText(emailString); // 复制链接到剪贴板
       },
     },
     {
