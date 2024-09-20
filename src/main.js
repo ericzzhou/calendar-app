@@ -145,10 +145,10 @@ class MainProcess {
       console.log("authUrl:", authUrl);
       shell.openExternal(authUrl);
     });
-
-    ipcMain.on("show-context-menu", (event, link) => {
-      console.log(`收到右键菜单请求：${link}`);
-      createContextMenu(link);
+    
+    ipcMain.on("show-context-menu", (event, obj) => {
+      // console.log(`收到右键菜单请求：`,obj);
+      createContextMenu(obj);
     });
 
     // 处理打开文件的请求

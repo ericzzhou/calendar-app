@@ -117,6 +117,7 @@ const formatRenderData = (groupedEvents) => {
         startDatetime: event.start.dateTime,
         duration: formatDuration(event.start.dateTime, event.end.dateTime),
         isOptional: checkIsOptional(event),
+        jsonString: JSON.stringify(event),
       })),
     });
   }
@@ -130,6 +131,7 @@ const formatRenderData = (groupedEvents) => {
         startDatetime: event.start.dateTime,
         duration: formatDuration(event.start.dateTime, event.end.dateTime),
         isOptional: checkIsOptional(event),
+        jsonString: JSON.stringify(event),
       })),
     });
   }
@@ -146,6 +148,7 @@ const formatRenderData = (groupedEvents) => {
           startDatetime: event.start.dateTime,
           duration: formatDuration(event.start.dateTime, event.end.dateTime),
           isOptional: checkIsOptional(event),
+          jsonString: JSON.stringify(event),
         }))
       );
       return;
@@ -160,6 +163,7 @@ const formatRenderData = (groupedEvents) => {
         startDatetime: event.start.dateTime,
         duration: formatDuration(event.start.dateTime, event.end.dateTime),
         isOptional: checkIsOptional(event),
+        jsonString: JSON.stringify(event),
       })),
     });
   });

@@ -102,8 +102,9 @@ class RenderProcess {
 
         console.log(`触发事件的元素${e.target}`, e);
         e.preventDefault();
-        const link = targetElement.dataset.link;
-        this.sendEventToMain("show-context-menu", link);
+        // const link = targetElement.dataset.link;
+        const event = targetElement.dataset.event
+        this.sendEventToMain("show-context-menu", event);
       }
     });
 

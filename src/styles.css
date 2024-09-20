@@ -74,7 +74,7 @@ body {
 .location {
   color: #fff;
   margin-top: 4px;
-  background-color: #333;
+  background-color: #018e8e;
   border-radius: 10px;
   padding: 2px 10px 2px 10px;
   display: inline-block;
@@ -100,15 +100,12 @@ body {
 
 .time-to-start {
   border-radius: 5px;
-  background-color: #0f6cbd;
+  background-color: #018e8e;
   color: #fff;
   padding: 2px 5px 2px 5px;
   margin-top: 10px;
 }
 
-.event-con {
-  display: block;
-}
 
 .isOptional {
   background: #696969;
@@ -117,4 +114,22 @@ body {
   padding: 5px;
   border-radius: 5px;
   color: #fff;
+}
+
+.events-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: left;
+  align-items: center;
+}
+.event-con{
+  width: 300px;
+  display: block;
+  border-bottom: 1px solid #f7f7f7;
+  ;
+}
+
+.duration{
+  color: #878383;
 }
