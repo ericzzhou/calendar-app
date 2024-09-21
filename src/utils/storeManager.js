@@ -9,6 +9,7 @@ _defaultConfiguration = {
   notificationTime: 10, //事件提醒时间，提前x分钟
   defaultEventSize: 20, // 默认加载的事件数量
   defaultFontSize: 12, // 默认字体
+  storeReminder:false // 默认弱提醒，右下角
 };
 
 class StoreManager {

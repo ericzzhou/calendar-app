@@ -1,4 +1,4 @@
-const { app, Tray, Menu } = require("electron");
+const { app, Tray, Menu ,dialog} = require("electron");
 const path = require("path");
 const notification = require("./notification");
 const storeManager = require("./storeManager");
@@ -58,6 +58,18 @@ const createTray = (mainWin) => {
       label: "测试通知",
       click: () => {
         notification("通知标题", "通知正文", false, true);
+      },
+    },
+    {
+      label: "测试Dialog",
+      click: () => {
+        dialog.showMessageBox({
+          type: "info",
+          title: "会议即将开始",
+          message: "会议 xxxx 即将在 10 分钟后开始",
+          buttons: [],
+          detail:"请提前准备"
+        });
       },
     },
     {
