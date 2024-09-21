@@ -41,7 +41,7 @@ const checkUpdate = (serverUrl, callback) => {
 
   autoUpdater.on("update-not-available", () => {
     // logManager.info("没有发现新版本 :(");
-    notification("更新", "没有发现新版本 :(");
+    // notification("更新", "没有发现新版本 :(");
   });
 
   autoUpdater.on("error", (error) => {

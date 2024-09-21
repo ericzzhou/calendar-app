@@ -95,6 +95,11 @@ const getDayOfWeek = (dateTime) => {
 };
 
 const checkIsOptional = (event) => {
+  // 检查 attendees 是否存在并且是一个数组
+  if (!event.attendees || !Array.isArray(event.attendees)) {
+    return false;
+  }
+
   // 遍历attendees数组
   for (const attendee of event.attendees) {
     // 检查是否有self为true且optional为true的attendee

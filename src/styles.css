@@ -5,6 +5,10 @@ body {
   padding-bottom: 30px;
 }
 
+a{
+  text-decoration: none;
+}
+
 #eventList {
   list-style-type: none;
   padding: 0;
