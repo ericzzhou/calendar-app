@@ -1,49 +1,125 @@
+:root {
+  /* 亮色模式变量 */
+  --primary-color: #2196F3;
+  --primary-dark: #1976D2;
+  --secondary-color: #00796B;
+  --background-color: #f5f5f5;
+  --text-color: #333;
+  --text-light: #666;
+  --highlight-color: #e0e0e0;
+  --white: #ffffff;
+  --accent-color: #FFC107;
+  --usage-background: #ffffff;
+  --usage-bar-background: #e0e0e0;
+  --usage-progress-color: #2196F3;
+
+  /* 字体变量 */
+  --main-font: "Microsoft YaHei", Arial, sans-serif;
+  --base-font-size: 14px;
+
+  /* 间距变量 */
+  --spacing-small: 4px;
+  --spacing-medium: 8px;
+  --spacing-large: 15px;
+
+  /* 阴影变量 */
+  --shadow-small: 0 1px 3px rgba(0,0,0,0.1);
+  --shadow-medium: 0 2px 4px rgba(0,0,0,0.2);
+  --shadow-large: 0 -2px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* 暗色模式变量 */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary-color: #64B5F6;
+    --primary-dark: #42A5F5;
+    --secondary-color: #26A69A;
+    --background-color: #121212;
+    --text-color: #E0E0E0;
+    --text-light: #BDBDBD;
+    --highlight-color: #2C2C2C;
+    --white: #1E1E1E;
+    --accent-color: #FFD54F;
+    --usage-background: #2C2C2C;
+    --usage-bar-background: #424242;
+    --usage-progress-color: #64B5F6;
+    
+    /* 阴影变量也需要调整 */
+    --shadow-small: 0 1px 3px rgba(255,255,255,0.1);
+    --shadow-medium: 0 2px 4px rgba(255,255,255,0.2);
+    --shadow-large: 0 -2px 5px rgba(255, 255, 255, 0.3);
+  }
+}
+
+/* 可以通过添加 .dark-mode 类来手动切换暗色模式 */
+.dark-mode {
+  --primary-color: #64B5F6;
+  --primary-dark: #42A5F5;
+  --secondary-color: #26A69A;
+  --background-color: #121212;
+  --text-color: #E0E0E0;
+  --text-light: #BDBDBD;
+  --highlight-color: #2C2C2C;
+  --white: #1E1E1E;
+  --accent-color: #FFD54F;
+  
+  --shadow-small: 0 1px 3px rgba(255,255,255,0.1);
+  --shadow-medium: 0 2px 4px rgba(255,255,255,0.2);
+  --shadow-large: 0 -2px 5px rgba(255, 255, 255, 0.3);
+}
+
 body {
-  font-family: "Microsoft YaHei", Arial, sans-serif;
-  font-size: 12px;
-  margin: 4px;
+  font-family: var(--main-font);
+  font-size: var(--base-font-size);
+  margin: var(--spacing-medium);
   padding-bottom: 30px;
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
 
-a{
+a {
   text-decoration: none;
-}
-
-#eventList {
-  list-style-type: none;
-  padding: 0;
+  color: var(--primary-color);
 }
 
 #authButton {
   width: 100%;
   padding: 10px 20px;
-  background-color: #4caf50;
-  color: white;
+  background-color: var(--primary-color);
+  color: var(--white);
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  box-shadow: var(--shadow-medium);
 }
 
 #authButton:hover {
-  background-color: #45a049;
+  background-color: var(--primary-dark);
 }
 
 .highlighted,
 .event-container:hover {
-  background-color: #ccc;
+  background-color: var(--highlight-color);
   cursor: pointer;
 }
+
 .event-container {
   display: flex;
-  justify-content: space-between; /* 在主轴（水平轴）上分配空白空间 */
-  align-items: center; /* 在交叉轴（垂直轴）上对齐 */
-  padding: 4px; /* 内边距 */
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-small);
+  background-color: var(--white);
+  margin-bottom: var(--spacing-medium);
+  border-radius: 4px;
+  box-shadow: var(--shadow-small);
 }
 
 .event-time {
-  padding: 4px; /* 内边距 */
-  width: 50px; /* 固定宽度 */
-  text-align: left; /* 内容居中对齐 */
+  padding: var(--spacing-small);
+  width: 50px;
+  text-align: left;
+  font-weight: bold;
+  color: var(--text-light);
 }
 
 .event-summary {
@@ -68,17 +144,17 @@ a{
 }
 
 .summary {
-  /* color: #878383; */
+  color: var(--text-color);
 }
+
 .email {
-  color: #878383;
-  margin-top: 4px;
+  color: var(--text-light);
 }
 
 .location {
-  color: #fff;
-  margin-top: 4px;
-  background-color: #018e8e;
+  color: var(--white);
+  margin-top: var(--spacing-small);
+  background-color: var(--secondary-color);
   border-radius: 10px;
   padding: 2px 10px 2px 10px;
   display: inline-block;
@@ -92,27 +168,28 @@ a{
   width: 100%;
   text-align: center;
   padding: 5px;
-  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.3); /* 阴影 */
-  background-color: #fff;
+  box-shadow: var(--shadow-large);
+  background-color: var(--white);
+  border-top: 1px solid var(--highlight-color);
 }
 
 #download-progress {
   text-align: center;
-  background-color: #ede96d;
-  padding: 4px;
+  background-color: var(--accent-color);
+  padding: var(--spacing-small);
+  color: var(--text-color);
 }
 
 .time-to-start {
   border-radius: 5px;
-  background-color: #018e8e;
-  color: #fff;
+  background-color: var(--secondary-color);
+  color: var(--white);
   padding: 2px 5px 2px 5px;
   margin-top: 10px;
 }
 
-
 .isOptional {
-  background: #696969;
+  background: #757575; /* 更深的灰色 */
   display: block;
   height: 100%;
   padding: 5px;
@@ -126,14 +203,60 @@ a{
   flex-wrap: wrap;
   justify-content: left;
   align-items: center;
+  margin-right: calc(-1 * var(--spacing-medium)); /* 抵消最后一列的右侧外边距 */
 }
-.event-con{
+
+.event-con {
   width: 300px;
   display: block;
   border-bottom: 1px solid #f7f7f7;
-  ;
+  margin-right: var(--spacing-medium); /* 添加右侧外边距 */
 }
 
 .duration{
   color: #878383;
+}
+
+/* ... 现有的样式保持不变 ... */
+
+.usage-stats {
+    background-color: var(--usage-background);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-small);
+}
+
+.usage-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.usage-label {
+    width: 50px;
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+.usage-bar {
+    flex-grow: 1;
+    height: 20px;
+    background-color: var(--usage-bar-background);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 0 10px;
+}
+
+.usage-progress {
+    height: 100%;
+    width: 0;
+    background-color: var(--usage-progress-color);
+    transition: width 0.3s ease-in-out;
+}
+
+.usage-percentage {
+    width: 50px;
+    text-align: right;
+    color: var(--text-light);
 }

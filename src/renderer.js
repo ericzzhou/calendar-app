@@ -72,6 +72,12 @@ class RenderProcess {
       dom.style.display = "block";
       dom.innerHTML = dowloadTips;
     });
+
+    ipcRenderer.on("usage-stats", (event, stats) => {
+      const msg = `CPU使用率: ${stats.cpu}%, 内存使用率: ${stats.memory}%`;
+      console.log(msg);
+      document.getElementById("usage-stats").innerHTML = msg;
+    });
   }
 
   // 向主线程发通知
@@ -114,7 +120,7 @@ class RenderProcess {
       }
     });
 
-    document.getElementById("github").addEventListener("click",(e) => {
+    document.getElementById("github").addEventListener("click", (e) => {
       e.preventDefault();
       this.sendEventToMain(
         "open-file",

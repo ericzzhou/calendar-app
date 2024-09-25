@@ -3,6 +3,7 @@ require('dotenv').config({ path: path.resolve(__dirname,"../", '.env') });
 const { app, BrowserWindow, ipcMain, shell, screen } = require("electron");
 const http = require("http");
 const url = require("url");
+const os = require('os');
 
 const fs = require("fs");
 const notifier = require("node-notifier");
@@ -33,6 +34,12 @@ class MainProcess {
       serverUrl: null,
     };
     this.oauthTokens = null;
+    this.usageInterval = null;
+    this.isExpanded = false;
+    this.windowWidth = 300; // 窗口固定宽度
+    this.windowHeight = 500; // 新增：窗口固定高度
+    this.visibleWidth = 5; // 可见部分的宽度
+    this.isAnimating = false; // 添加一个标志来防止动画重叠
   }
 
   /**
@@ -60,11 +67,39 @@ class MainProcess {
    * @returns
    */
   async InitWindow() {
-    const win = await winManager.createMainWin(
-      `${__dirname}/preload.js`,
-      `${__dirname}/index.html`
-    );
+    const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+    const win = new BrowserWindow({
+      width: this.windowWidth,
+      height: this.windowHeight,
+      x: width - this.visibleWidth,
+      y: height - this.windowHeight,
+      frame: false,
+      transparent: true,
+      alwaysOnTop: true,
+      skipTaskbar: false, // 保持为 false
+      webPreferences: {
+        preload: path.join(__dirname, 'preload.js'),
+        nodeIntegration: true,
+        contextIsolation: false,
+      },
+      type: 'toolbar', // 添加这一行
+    });
+
+    win.loadFile(path.join(__dirname, 'index.html'));
     this.windows.main = win;
+
+    // 设置任务栏上显示的应用名称
+    win.setTitle(app.getName());
+
+    // 使用 webContents 来添加事件监听器
+    win.webContents.on('did-finish-load', () => {
+      win.on('mouse-enter', () => this.expandWindow());
+      win.on('mouse-leave', () => this.collapseWindow());
+      
+      // 在这里添加显示窗口的代码
+      win.show();
+      win.focus();
+    });
 
     win.webContents.send("configuration", this.configuration);
     win.webContents.send("oauthTokens", this.oauthTokens);
@@ -77,7 +112,75 @@ class MainProcess {
       appStorePath: await storeManager.getStorePath(),
       appReleaseNote: releaseNote,
     });
-    this.windows.main.show();
+
+    // 在窗口创建后,设置任务栏缩略图
+    win.setThumbnailClip({ x: 0, y: 0, width: this.windowWidth, height: this.windowHeight });
+    win.setThumbnailToolTip(app.getName());
+
+    this.startMouseDetection();
+  }
+
+  expandWindow() {
+    if (!this.isExpanded && !this.isAnimating) {
+      this.isAnimating = true;
+      this.animateWindow(this.visibleWidth, this.windowWidth);
+    }
+  }
+
+  collapseWindow() {
+    if (this.isExpanded && !this.isAnimating) {
+      this.isAnimating = true;
+      this.animateWindow(this.windowWidth, this.visibleWidth);
+    }
+  }
+
+  animateWindow(startVisible, endVisible) {
+    const animationDuration = 150; // 动画持续时间（毫秒）
+    const steps = 10; // 动画步数
+    const stepDuration = animationDuration / steps;
+    const stepVisible = (endVisible - startVisible) / steps;
+
+    let currentStep = 0;
+    const animate = () => {
+      if (currentStep < steps) {
+        const visibleWidth = startVisible + stepVisible * currentStep;
+        const screenWidth = screen.getPrimaryDisplay().workAreaSize.width;
+        const screenHeight = screen.getPrimaryDisplay().workAreaSize.height;
+        const newX = screenWidth - visibleWidth;
+        const newY = screenHeight - this.windowHeight; // 保持窗口在屏幕底部
+        this.windows.main.setPosition(Math.round(newX), newY);
+        currentStep++;
+        setTimeout(animate, stepDuration);
+      } else {
+        this.isAnimating = false;
+        this.isExpanded = (endVisible === this.windowWidth);
+        // 确保最终位置精确
+        const screenWidth = screen.getPrimaryDisplay().workAreaSize.width;
+        const screenHeight = screen.getPrimaryDisplay().workAreaSize.height;
+        const finalX = screenWidth - endVisible;
+        const finalY = screenHeight - this.windowHeight; // 保持窗口在屏幕底部
+        this.windows.main.setPosition(Math.round(finalX), finalY);
+      }
+    };
+
+    animate();
+  }
+
+  startMouseDetection() {
+    setInterval(() => {
+      if (this.isAnimating) return; // 如果正在动画中，不进行检测
+
+      const mousePosition = screen.getCursorScreenPoint();
+      const [winX, winY] = this.windows.main.getPosition();
+      const [winWidth, winHeight] = this.windows.main.getSize();
+
+      if (mousePosition.x >= winX && mousePosition.x <= winX + winWidth &&
+          mousePosition.y >= winY && mousePosition.y <= winY + winHeight) {
+        this.expandWindow();
+      } else {
+        this.collapseWindow();
+      }
+    }, 100); // 每100毫秒检查一次
   }
 
   async onAppEvent() {
@@ -113,6 +216,8 @@ class MainProcess {
       console.log("app.on before-quit");
       logManager.info("应用正在退出...");
 
+      this.stopUsageMonitoring(); // 停止监控资源使用情况
+
       try {
         // 关闭服务
         if (this.httpServer) {
@@ -120,7 +225,7 @@ class MainProcess {
           logManager.info("HTTP 服务器已关闭");
         }
 
-        // 关闭窗口
+        // 关闭口
         BrowserWindow.getAllWindows().forEach((win) => {
           win.destroy();
         });
@@ -162,7 +267,7 @@ class MainProcess {
     // });
 
     // ipcMain.on("calendar-events", (event, events) => {
-    //   eventManager.processEvents(events); // 处理事件并安排提醒
+    //   eventManager.processEvents(events); // 处理件并安排提醒
     //   // this.buildTemplate(events);
     //   const html = eventManager.buildTemplate(events, this.configuration);
     //   this.windows.main.webContents.send("html", html); //TODO 改成 replay
@@ -265,6 +370,35 @@ class MainProcess {
         this.refreshEventHtml(this.httpServerPort);
       }
     });
+
+    this.startUsageMonitoring(); // 开始监控资源使用情况
+  }
+
+  startUsageMonitoring() {
+    this.usageInterval = setInterval(() => {
+      const cpuUsage = process.cpuUsage();
+      const memUsage = process.memoryUsage();
+      
+      const totalMem = os.totalmem();
+      const freeMem = os.freemem();
+      
+      const cpuPercentage = ((cpuUsage.user + cpuUsage.system) / 1000000).toFixed(2);
+      const memPercentage = ((memUsage.rss / totalMem) * 100).toFixed(2);
+      
+      if (this.windows.main) {
+        this.windows.main.webContents.send('usage-stats', {
+          cpu: cpuPercentage,
+          memory: memPercentage
+        });
+      }
+    }, 1000); // 每秒更新一次
+  }
+
+  stopUsageMonitoring() {
+    if (this.usageInterval) {
+      clearInterval(this.usageInterval);
+      this.usageInterval = null;
+    }
   }
 }
 
@@ -281,7 +415,7 @@ main.Init();
 // 监听未处理的 Promise 拒绝事件
 process.on("unhandledRejection", (reason, promise) => {
   if (reason instanceof Error) {
-    // 如果 reason 是 Error 对象，记录详细的错误信息
+    // 如果 reason 是 Error 对象记录详细的错误信息
     logManager.error(
       `Unhandled Rejection at: ${promise}, reason: ${reason.message}, stack: ${reason.stack}`
     );
@@ -290,7 +424,7 @@ process.on("unhandledRejection", (reason, promise) => {
     logManager.error(`Unhandled Rejection at: ${promise}, reason: ${reason}`);
   }
   // logManager.error(`Unhandled Rejection at: ${promise}, reason: ${reason}`);
-  // 你还可以根据需要关闭应用程序或处理其他逻辑
+  // 你还可以根据需要关闭应用程或处理其他逻辑
 });
 
 // 监听未捕获的异常

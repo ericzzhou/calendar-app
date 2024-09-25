@@ -11,7 +11,22 @@
 <body>
     <div class="container">
 
-
+        <div id="usage-stats" class="usage-stats">
+            <div class="usage-item">
+                <span class="usage-label">CPU:</span>
+                <div class="usage-bar">
+                    <div id="cpu-bar" class="usage-progress"></div>
+                </div>
+                <span id="cpu-percentage" class="usage-percentage"></span>
+            </div>
+            <div class="usage-item">
+                <span class="usage-label">内存:</span>
+                <div class="usage-bar">
+                    <div id="memory-bar" class="usage-progress"></div>
+                </div>
+                <span id="memory-percentage" class="usage-percentage"></span>
+            </div>
+        </div>
         <div id="download-progress" style="display: none;"></div>
         <div id="eventList"></div>
         <div id="footer">
