@@ -6,6 +6,8 @@ const eventManager = require("./eventManager");
 const checkUpdate = require("./update");
 const { convertBytesPerSecond } = require("./utils");
 const logManager = require("./logManager");
+
+let menuBarVisibility = false;
 /***
  * 创建并返回系统托盘对象
  */
@@ -50,7 +52,8 @@ const createTray = (mainWin) => {
       label: "显示系统菜单",
       click: () => {
         if (mainWin) {
-          mainWin.setMenuBarVisibility(true);
+          menuBarVisibility = !menuBarVisibility;
+          mainWin.setMenuBarVisibility(menuBarVisibility);
         }
       },
     },

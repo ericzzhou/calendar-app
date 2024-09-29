@@ -1,6 +1,6 @@
 const path = require("path");
 require('dotenv').config({ path: path.resolve(__dirname,"../", '.env') });
-const { app, BrowserWindow, ipcMain, shell, screen } = require("electron");
+const { app, BrowserWindow, ipcMain, shell, screen, Tray } = require("electron");
 const http = require("http");
 const url = require("url");
 const os = require('os');
@@ -35,11 +35,12 @@ class MainProcess {
     };
     this.oauthTokens = null;
     this.usageInterval = null;
-    this.isExpanded = false;
+    this.isExpanded = true; // 修改这里，默认展开
     this.windowWidth = 300; // 窗口固定宽度
-    this.windowHeight = 500; // 新增：窗口固定高度
+    this.windowHeight = 800; // 修改这里：窗口固定高度设置为800
     this.visibleWidth = 5; // 可见部分的宽度
     this.isAnimating = false; // 添加一个标志来防止动画重叠
+    this.isMenuEnabled = false; // 添加这行来控制菜单是否启用
   }
 
   /**
@@ -71,18 +72,17 @@ class MainProcess {
     const win = new BrowserWindow({
       width: this.windowWidth,
       height: this.windowHeight,
-      x: width - this.visibleWidth,
+      x: width - this.windowWidth, // 修改这里，默认完全显示
       y: height - this.windowHeight,
-      frame: false,
-      transparent: true,
-      alwaysOnTop: true,
+      frame: true, // 修改这里，启用窗口框架
+      transparent: false, // 修改这里，禁用透明
+      alwaysOnTop: false, // 修改这里，不总是置顶
       skipTaskbar: false, // 保持为 false
       webPreferences: {
         preload: path.join(__dirname, 'preload.js'),
         nodeIntegration: true,
         contextIsolation: false,
       },
-      type: 'toolbar', // 添加这一行
     });
 
     win.loadFile(path.join(__dirname, 'index.html'));
@@ -90,12 +90,9 @@ class MainProcess {
 
     // 设置任务栏上显示的应用名称
     win.setTitle(app.getName());
-
+    win.setMenuBarVisibility(this.isMenuEnabled);
     // 使用 webContents 来添加事件监听器
     win.webContents.on('did-finish-load', () => {
-      win.on('mouse-enter', () => this.expandWindow());
-      win.on('mouse-leave', () => this.collapseWindow());
-      
       // 在这里添加显示窗口的代码
       win.show();
       win.focus();
@@ -117,7 +114,11 @@ class MainProcess {
     win.setThumbnailClip({ x: 0, y: 0, width: this.windowWidth, height: this.windowHeight });
     win.setThumbnailToolTip(app.getName());
 
-    this.startMouseDetection();
+    // 添加以下代码来恢复默认菜单
+    if (this.isMenuEnabled) {
+      const { Menu } = require('electron');
+      Menu.setApplicationMenu(Menu.getApplicationMenu());
+    }
   }
 
   expandWindow() {
@@ -166,23 +167,6 @@ class MainProcess {
     animate();
   }
 
-  startMouseDetection() {
-    setInterval(() => {
-      if (this.isAnimating) return; // 如果正在动画中，不进行检测
-
-      const mousePosition = screen.getCursorScreenPoint();
-      const [winX, winY] = this.windows.main.getPosition();
-      const [winWidth, winHeight] = this.windows.main.getSize();
-
-      if (mousePosition.x >= winX && mousePosition.x <= winX + winWidth &&
-          mousePosition.y >= winY && mousePosition.y <= winY + winHeight) {
-        this.expandWindow();
-      } else {
-        this.collapseWindow();
-      }
-    }, 100); // 每100毫秒检查一次
-  }
-
   async onAppEvent() {
     await app.whenReady();
     await this.InitWindow();
@@ -205,13 +189,13 @@ class MainProcess {
       logManager.error(error);
     }
     //#region  APP 事件监听
-    // 当窗口关闭时隐藏到托盘，而不是完全退出应用
-    app.on("close", (event) => {
-      console.log("app.on close");
-      event.processEvents(); // 阻止默认行为，防止应用关闭
-      this.windows.main.hide();
+    // 修改这里：监听窗口的 'close' 事件，而不是应用的 'close' 事件
+    this.windows.main.on('close', (event) => {
+      event.preventDefault(); // 阻止窗口关闭
+      this.windows.main.hide(); // 隐藏窗口
     });
 
+    // 保留原有的 'before-quit' 事件处理
     app.on("before-quit", () => {
       console.log("app.on before-quit");
       logManager.info("应用正在退出...");
@@ -371,7 +355,8 @@ class MainProcess {
       }
     });
 
-    this.startUsageMonitoring(); // 开始监控资源使用情况
+    // this.tray = createTray(this.windows.main);
+    this.startUsageMonitoring();
   }
 
   startUsageMonitoring() {
@@ -385,11 +370,8 @@ class MainProcess {
       const cpuPercentage = ((cpuUsage.user + cpuUsage.system) / 1000000).toFixed(2);
       const memPercentage = ((memUsage.rss / totalMem) * 100).toFixed(2);
       
-      if (this.windows.main) {
-        this.windows.main.webContents.send('usage-stats', {
-          cpu: cpuPercentage,
-          memory: memPercentage
-        });
+      if (this.tray) {
+        this.tray.setToolTip(`CPU: ${cpuPercentage}%\n内存: ${memPercentage}%\n${new Date().toLocaleString()}`);
       }
     }, 1000); // 每秒更新一次
   }
