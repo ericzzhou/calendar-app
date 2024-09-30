@@ -8,7 +8,7 @@
     <h3>{{date}} {{DayOfWeek}}</h3>
     <div class="events-container">
         {{#each events}}
-        <div class="event-con" data-starttime="{{startDatetime}}">
+        <div class="event-con event-status_{{myStatus}}" data-starttime="{{startDatetime}}">
             <span class="time-to-start" style="display: none;"> </span>
             <div class="event-container" data-link="{{hangoutLink}}" data-event="{{jsonString}}">
                 <div class="event-time">

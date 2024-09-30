@@ -216,7 +216,9 @@ class EventManager {
    */
   async buildEventsHtml(httpServerPort) {
     const events = await this.getEventsFromCalendar(null, httpServerPort);
-
+    // console.log("获取到的时间列表见日志文件：");
+    // logManager.debug(JSON.stringify(events));
+    
     this.setEventsNotification(events);
 
     const html = await this.buildTemplate(events);

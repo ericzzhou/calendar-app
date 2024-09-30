@@ -7,7 +7,7 @@ const createContextMenu = (event) => {
   const { hangoutLink, attendees, htmlLink, attachments } = JSON.parse(event);
   const menu = Menu.buildFromTemplate([
     {
-      label: "打开会议",
+      label: "进入会议",
       click: () => {
         shell.openExternal(hangoutLink);
 
@@ -22,12 +22,7 @@ const createContextMenu = (event) => {
         console.log(`会议链接已复制: ${hangoutLink}`);
       },
     },
-    {
-      label: "打开谷歌日历",
-      click: () => {
-        shell.openExternal("https://calendar.google.com/calendar/u/0/r/month");
-      },
-    },
+   
     {
       label: "复制参会人到剪贴板",
       click: () => {
@@ -41,6 +36,12 @@ const createContextMenu = (event) => {
       label: "编辑日历",
       click: () => {
         shell.openExternal(htmlLink);
+      },
+    },
+    {
+      label: "打开谷歌日历",
+      click: () => {
+        shell.openExternal("https://calendar.google.com/calendar/u/0/r/month");
       },
     },
     {

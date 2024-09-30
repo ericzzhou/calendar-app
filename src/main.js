@@ -86,6 +86,11 @@ class MainProcess {
     });
 
     win.loadFile(path.join(__dirname, 'index.html'));
+    console.log("NODE_ENV:",process.env.NODE_ENV);
+    if (process.env.NODE_ENV === 'development') {
+      win.webContents.openDevTools();
+    }
+    
     this.windows.main = win;
 
     // 设置任务栏上显示的应用名称
@@ -119,6 +124,8 @@ class MainProcess {
       const { Menu } = require('electron');
       Menu.setApplicationMenu(Menu.getApplicationMenu());
     }
+
+    
   }
 
   expandWindow() {

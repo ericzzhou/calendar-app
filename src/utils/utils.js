@@ -110,6 +110,29 @@ const checkIsOptional = (event) => {
   // 如果没有匹配的条件，返回false
   return false;
 };
+
+/**
+ * 获取我的事件状态
+ * @param {*} event 
+ * @returns  declined:拒绝 tentative:暂定 needsAction:待行动 accepted:是，会参加会议
+ */
+const getMyStatus = (event) => {
+  // 检查 attendees 是否存在并且是一个数组
+  if (!event.attendees || !Array.isArray(event.attendees)) {
+    return null;
+  }
+
+  // 遍历attendees数组
+  for (const attendee of event.attendees) {
+    // 检查是否有self为true且optional为true的attendee
+    if (attendee.self === true ) {
+      return attendee.responseStatus;
+    }
+  }
+  // 如果没有匹配的条件，返回false
+  return null;
+};
+
 const formatRenderData = (groupedEvents) => {
   const events = [];
   if (groupedEvents.today.length > 0) {
@@ -123,6 +146,7 @@ const formatRenderData = (groupedEvents) => {
         duration: formatDuration(event.start.dateTime, event.end.dateTime),
         isOptional: checkIsOptional(event),
         jsonString: JSON.stringify(event),
+        myStatus:getMyStatus(event)
       })),
     });
   }
@@ -137,6 +161,7 @@ const formatRenderData = (groupedEvents) => {
         duration: formatDuration(event.start.dateTime, event.end.dateTime),
         isOptional: checkIsOptional(event),
         jsonString: JSON.stringify(event),
+        myStatus:getMyStatus(event)
       })),
     });
   }
@@ -154,6 +179,7 @@ const formatRenderData = (groupedEvents) => {
           duration: formatDuration(event.start.dateTime, event.end.dateTime),
           isOptional: checkIsOptional(event),
           jsonString: JSON.stringify(event),
+          myStatus:getMyStatus(event)
         }))
       );
       return;
@@ -169,6 +195,7 @@ const formatRenderData = (groupedEvents) => {
         duration: formatDuration(event.start.dateTime, event.end.dateTime),
         isOptional: checkIsOptional(event),
         jsonString: JSON.stringify(event),
+        myStatus:getMyStatus(event)
       })),
     });
   });

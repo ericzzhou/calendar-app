@@ -260,3 +260,24 @@ a {
     text-align: right;
     color: var(--text-light);
 }
+
+/* declined:拒绝 tentative:暂定 needsAction:待行动 accepted:是，会参加会议 */
+.event-status_declined .event-container{
+  text-decoration: line-through;
+}
+
+/* tentative:暂定 */
+.event-status_tentative .event-container{
+  position: relative;
+}
+.event-status_tentative .event-container::after{
+  content: "不确定";
+  position: absolute;
+  right: 0;
+  top: 0;
+  /* font-size: 12px; */
+  background: #757575;
+  padding: 5px;
+  border-radius: 5px;
+  color: #c1d8eb;
+}

@@ -4,10 +4,10 @@
   "description": "calendar-app 日程提醒",
   "keywords": [],
   "main": "./src/main.js",
-  "version": "1.0.24",
+  "version": "1.0.25",
   "author": "ericz",
   "scripts": {
-    "start": "electron .",
+    "start": "set NODE_ENV=development && electron .",
     "build": "set NODE_ENV=production && electron-builder --win --publish=always"
   },
   "build": {
